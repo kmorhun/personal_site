@@ -14,9 +14,9 @@ function $$ (selector, context = document) {
 
 let pages = {
     ".": "Home",
-    "/projects": "Projects",
-    "/cv": "CV",
-    "/contact": "Contact",
+    "./projects": "Projects",
+    "./cv": "CV",
+    "./contact": "Contact",
     "https://github.com/kmorhun": "Follow Me on Github~" ,
 }
 
