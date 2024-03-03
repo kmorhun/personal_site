@@ -1,6 +1,7 @@
 <script>
     import Nav from "../lib/Nav.svelte";
-
+    import "../style.css";
+    
     let pages = [
         {url: "./", title: "Home"},
         {url: "./projects", title: "Projects"},
