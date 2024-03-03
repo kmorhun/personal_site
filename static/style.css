@@ -44,16 +44,6 @@ img {
     display: grid;
     grid-column-gap: 1em;
     grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
-    
-    article {
-        display: grid;
-        grid-row: span 3;
-        grid-template-rows: subgrid;
-
-        h2 {
-            margin: 0;
-        }
-    }
 }
 
 /* CONTACT PAGE */

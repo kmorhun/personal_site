@@ -2,6 +2,11 @@
 	<title>Home Page</title>
 </svelte:head>
 
+<script>
+    import projects from '$lib/projects.json';
+    import Project from '$lib/Project.svelte';
+</script>
+
 <article class="content">
     <h1>Привіт! Welcome!</h1>
     <div id="intro-content">
@@ -32,5 +37,12 @@
         to my own physical body. I am convinced that this 
         can and must be applied to the larger societal 
         systems we find ourselves in.</p>
+    </div>
+
+    <h2>A peek at what I'm working on...</h2>
+    <div class="projects">
+        {#each projects.slice(0, 3) as p}
+            <Project info={p} hlevel=3/>
+        {/each}
     </div>
 </article>
