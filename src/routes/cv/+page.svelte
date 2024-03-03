@@ -1,3 +1,7 @@
+<svelte:head>
+	<title>CV</title>
+</svelte:head>
+
 <!-- 
     <article class="resume-entry">
         <div class="resume-entry-header">

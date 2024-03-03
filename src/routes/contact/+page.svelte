@@ -1,3 +1,7 @@
+<svelte:head>
+	<title>Contact me!</title>
+</svelte:head>
+
 <article class="content">
     <h1 id="contact-title">Get in touch!</h1>
     <form action="mailto:kat.morhun@gmail.com">

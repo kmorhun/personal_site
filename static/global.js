@@ -4,6 +4,8 @@ function $$ (selector, context = document) {
 	return Array.from(context.querySelectorAll(selector));
 }
 
+// TODO: FIX CURRENT PAGE CSS
+
 // let navLinks = $$("nav a")
 // let currentLink = navLinks.find(a => a.host === location.host && a.pathname === location.pathname)
 
@@ -11,24 +13,24 @@ function $$ (selector, context = document) {
 // currentLink?.classList.add("current-page")
 
 let pages = {
-    "": "Home",
-    "projects/": "Projects",
-    "cv/": "CV",
-    "contact/": "Contact",
+    ".": "Home",
+    "/projects": "Projects",
+    "/cv": "CV",
+    "/contact": "Contact",
     "https://github.com/kmorhun": "Follow Me on Github~" ,
 }
 
-const ARE_WE_HOME = document.documentElement.classList.contains("home");
+// const ARE_WE_HOME = document.documentElement.classList.contains("home");
 // console.log("ARE_WE_HOME", ARE_WE_HOME);
 let nav = document.createElement("nav");
 document.body.prepend(nav);
 
 for (let url in pages) {
     let title = pages[url];
-    // console.log("RAW URL", url);
+    console.log("RAW URL", url);
 
     // make the URL relative if you're not on the home page, or if deployed
-    url = (ARE_WE_HOME || url.startsWith("https")) ? url : "../" + url;
+    // url = (ARE_WE_HOME || url.startsWith("https")) ? url : "../" + url;
     // console.log("MODIFIED URL", url);
     let a = document.createElement("a");
     a.href = url;
@@ -37,6 +39,7 @@ for (let url in pages) {
     if (a.host !== location.host) {
         a.target = "_blank";
     }
+    console.log(a.host, location.host, a.pathname, location.pathname)
     if (a.host === location.host && a.pathname ===location.pathname) {
         a.classList.add("current-page");
     }

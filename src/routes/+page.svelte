@@ -1,3 +1,7 @@
+<svelte:head>
+	<title>Home Page</title>
+</svelte:head>
+
 <article class="content">
     <h1>Привіт! Welcome!</h1>
     <div id="intro-content">
