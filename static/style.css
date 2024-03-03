@@ -74,37 +74,6 @@ input, textarea, button, select {
     font: inherit;
 }
 
-/* NAV BAR */
-nav {
-    --border-color: oklch(50% 10% 200 / 40%);
-    display: flex;
-    border-bottom: 1px solid var(--border-color);
-
-}
-
-nav a {
-    flex: 1;
-    text-decoration: none;
-    color: inherit;
-    text-align: center;
-    padding: 0.5em;
-}
-
-nav a:hover {
-    border-bottom: 0.4em solid var(--color-accent);
-    /* The following doesn't work in Firefox :(*/
-    /* background-color: oklch(from var(--color-accent) 95% 5% h); */
-    background-color: color-mix(in oklch, var(--color-accent), canvas 85%);
-    /* padding: 0.3em; */
-}
-
-nav .current-page {
-    border-bottom: 0.4em solid var(--border-color);
-    /* background-color: hsl(185, 8.8%, 83%); */
-    background-color: color-mix(in oklch, var(--border-color), canvas 85%);
-    /* padding: 0.3em; */
-}
-
 /* INTRO PAGE */
 #selfie {
     width: 100%;
