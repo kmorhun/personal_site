@@ -1,5 +1,5 @@
 <article>
-    <svelte:element this={"h"+hlevel}>{p.title}</svelte:element>
+    <svelte:element this={"h"+hlevel}>{p.title} - {p.year}</svelte:element>
     <img src={p.image} alt="">
     <p>{p.description}</p>
 </article>
