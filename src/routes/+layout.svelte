@@ -9,8 +9,36 @@
         {url: "./contact", title: "Contact"},
         {url: "https://github.com/kmorhun", title: "Follow Me on Github~"},
     ];
+
+    // let colorScheme = "light dark";
+    let localStorage = globalThis.localStorage ?? {};
+    let colorScheme = localStorage.colorScheme ?? "light dark";
+    let root = globalThis?.document?.documentElement;
+    
+    // reactive properties
+    $: localStorage.colorScheme = colorScheme;
+    $: root?.style.setProperty("color-scheme", colorScheme);
+
 </script>
 
+<style>
+    .switch {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        font-size: 80%;
+    }
+</style>
+
 <Nav info={pages} />
+
+<label class="switch">
+    Theme:
+    <select bind:value={ colorScheme }>
+        <option value="light dark">Automatic</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label>
 
 <slot />

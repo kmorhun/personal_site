@@ -6,7 +6,33 @@
     import projects from '$lib/projects.json';
     import Project from '$lib/Project.svelte';
     import Projects from '../lib/Projects.svelte';
+
+    let profileData = {
+	ok: true,
+	json: async () => ({
+		followers: 100,
+		following: 100,
+		public_repos: 100,
+		public_gists: 100,
+	})
+};
 </script>
+
+<style>
+    dl {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+    }
+    dt {
+        grid-row: 1/2;
+    }
+
+    dd {
+        grid-row: 2/3;
+        font-size: 2.0rem;
+        margin: 0;
+    }
+</style>
 
 <article class="content">
     <h1>Привіт! Welcome!</h1>
@@ -40,6 +66,32 @@
         systems we find ourselves in.</p>
     </div>
 
+    <h2>My GitHub Stats</h2>
+    {#await fetch("https://api.github.com/users/kmorhun") }
+        <p>Loading...</p>
+    {:then response}
+        {#await response.json()}
+            <p>Decoding...</p>
+        {:then data}
+            <dl>
+                <dt>Followers</dt>
+                <dd>{data.followers}</dd>
+                <dt>Following</dt>
+                <dd>{data.following}</dd>
+                <dt>Public Repos</dt>
+                <dd>{data.public_repos}</dd>
+            </dl>        
+        {:catch error}
+            <p class="error">
+                Something went wrong: {error.message}
+            </p>
+        {/await}
+    {:catch error}
+        <p class="error">
+            Something went wrong: {error.message}
+        </p>
+    {/await}
+    
     <h2>A peek at what I'm working on...</h2>
     <Projects list={projects.slice(0, 2)}/>
 </article>
