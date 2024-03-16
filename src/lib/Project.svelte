@@ -1,7 +1,10 @@
 <article>
-    <svelte:element this={"h"+hlevel}>{p.title} - {p.year}</svelte:element>
+    <svelte:element this={"h"+hlevel}>{p.title}</svelte:element>
     <img src={p.image} alt="">
-    <p>{p.description}</p>
+    <div>
+        <p>{p.description}</p>
+        <p class="year">c. {p.year}</p>
+    </div>
 </article>
 
 <style>
@@ -12,6 +15,11 @@
         h2, h3 {
             margin: 0;
         }
+    }
+
+    .year {
+        font-family: 'Baskerville';
+        font-variant-numeric: oldstyle-nums;
     }
 </style>
 
