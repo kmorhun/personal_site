@@ -1,9 +1,9 @@
 <article>
-    <svelte:element this={"h"+hlevel}>{p.title}</svelte:element>
-    <img src={p.image} alt="">
+    <svelte:element this={"h"+hlevel}>{info.title}</svelte:element>
+    <img src={info.image} alt="">
     <div>
-        <p>{p.description}</p>
-        <p class="year">c. {p.year}</p>
+        <p>{info.description}</p>
+        <p class="year">c. {info.year}</p>
     </div>
 </article>
 
@@ -27,5 +27,5 @@
     // alias info to an internal variable
     export let info = {};
     export let hlevel = 2;
-    let p = info;
+    // let p = info;
 </script>
