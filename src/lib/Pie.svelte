@@ -18,6 +18,12 @@
     let colors = d3.scaleOrdinal(d3.schemeSet3);
 
     export let selectedIndex = -1;
+
+    function toggleWedge (index, event) {
+        if (!event. key || event.key === "Enter") {
+            selectedIndex = (selectedIndex===index) ? -1 : index;
+        }
+    }
 </script>
 
 <style>
@@ -29,15 +35,28 @@
         overflow: visible;
     }
 
-    svg:has(path:hover) {
-        path:not(:hover) {
+    svg:has(path:hover, path:focus-visible) {
+        path:not(:hover, :focus-visible) {
             opacity: 50%;
         }
     }
 
     path {
         transition: 300ms;
+        transform: rotate(var(--mid-angle))
+            translateY(0)
+            rotate(calc(-1*var(--mid-angle)));
         cursor: pointer;
+        outline: none;
+
+        --angle: calc(var(--end-angle) - var(--start-angle));
+        --mid-angle: calc(var(--start-angle) + var(--angle) / 2);
+
+        &.selected {
+            transform: rotate(var(--mid-angle))
+                translateY(-6px) scale(1.1)
+                rotate(calc(-1*var(--mid-angle)));
+        }
     }
 
     .container {
@@ -86,8 +105,15 @@
     <svg viewBox="-50 -50 100 100">
          {#each arcs as arc, i}
             <path d={arc} fill={colors(i)} 
-                on:click={e => selectedIndex = (selectedIndex===i) ? -1 : i}
-                class:selected={selectedIndex === i}/>
+                on:click={e => toggleWedge(i, e)}
+                on:keyup={e => toggleWedge(i, e)}
+                class:selected={selectedIndex === i}
+                tabindex="0"
+                role="button"
+                aria-label:button
+                style="
+                    --start-angle: { arcData[i]?.startAngle }rad;
+                    --end-angle: { arcData[i]?.endAngle }rad;"/>
         {/each}
     </svg>
 
