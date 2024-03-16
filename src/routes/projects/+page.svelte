@@ -2,6 +2,7 @@
 	<title>Projects</title>
 </svelte:head>
 
+<!-- TODO: FIGURE OUT FILTERING BY BOTH YEAR AND QUERY -->
 <script>
     import * as d3 from 'd3';
     import projects from '$lib/projects.json';
@@ -31,7 +32,22 @@
         rolledData = d3.rollups(filteredProjects, v => v.length, d => d.year);
         pieData = rolledData.map(([year, count]) => ({label: year, value: count}));
     }
+
+    let selectedYearIndex = -1;
+    let selectedYear;
+    $: selectedYear = selectedYearIndex > -1 ? pieData[selectedYearIndex].label : null;
+
+    let filteredByYear;
     
+    $: filteredByYear = projects.filter(project => {
+        
+        if (selectedYearIndex > -1) {
+            return project.year === selectedYear;
+        }
+
+        return true;
+    }); 
+
 </script>
 
 <style>
@@ -44,9 +60,9 @@
 <article class="content">
     <h1>What am I working on? At least {filteredProjects.length} things!</h1>
     
-    <Pie data={pieData}/>
+    <Pie data={pieData} bind:selectedIndex={selectedYearIndex}/>
     <input type="search" bind:value={query}
         aria-label="Search projects" placeholder="🔍 Search projects…" />
     
-        <Projects list={filteredProjects}/>
+    <Projects list={filteredByYear}/>
 </article>

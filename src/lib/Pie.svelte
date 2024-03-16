@@ -93,9 +93,9 @@
 
     <ul class="legend">
         {#each data as d, i}
-        <li style="--color: {colors(i)}"
-            class:selected={selectedIndex === i}>
-            <span class="swatch"></span>
+        <li style="--color: {colors(i)}">
+            <span class="swatch"
+                class:selected={selectedIndex === i}></span>
                 {d.label} <em>({d.value})</em>
             </li>
         {/each}
