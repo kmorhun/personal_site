@@ -1,27 +1,31 @@
 [
     {
-        "title": "Title1",
-        "year": "2024",
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Description1"
-    },
-    {
-        "title": "Title2",
-        "year": "2024",
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Description2"
-    },
-    {
-        "title": "Title3",
+        "title": "Screening Tool for Equity Analysis of Projects (STEAP)",
         "year": "2023",
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Description3"
+        "image": "../../static/images/steap_screenshot.png",
+        "description": "A full-stack GIS webapp improved for the US DOT to ease equitable transportation policy planning. In particular I added data analysis and report generation to the tool.",
+        "url": "https://maps.dot.gov/fhwa/steap/index.html"
     },
     {
-        "title": "Title4",
+        "title": "Self-Sufficient Cities: Deanwood, DC",
         "year": "2022",
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Description4"
+        "image": "../../static/images/deanwood.webp",
+        "description": "An investigation of oral histories and city directories investigating the strength that self-sustainability and a strong sense of community gave to Deanwood DC in the early 1900s.",
+        "url": "https://cities.dhlab.mit.edu/deanwood/community#source-8"
+    },
+    {
+        "title": "Gender Analysis Toolkit",
+        "year": "2021",
+        "image": "../../static/images/books.jpeg",
+        "description": "A Python library developed to analyze the grammatical constructions of the books in Project Gutenberg and their connections to gender",
+        "url": "https://gender-analysis.readthedocs.io/en/latest/index.html"
+    },
+    {
+        "title": "Data-Centered AI to reduce Bias and Uncertainty in SS-VAE's",
+        "year": "2022",
+        "image": "../../static/images/faces.png",
+        "description": "Winner of the third Lab challenge in MIT's 6.S191: Introduction to Deep Learning, I detected and reduced bias and uncertainty in a Semi-Supervised Variational Auto-Encoder with the Capsa library",
+        "url": "https://docs.google.com/document/d/1HOvvuJEdsX3OUfUsW4AZVhR4Zxqhq2I5v6o2DjHk9Ko/edit?usp=sharing"
     },
     {
         "title": "Title5",
