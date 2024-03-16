@@ -15,17 +15,29 @@
     let sliceGenerator = d3.pie().value(d => d.value);
     $: arcData = sliceGenerator(data);
     $: arcs = arcData.map(d => arcGenerator(d));
-    let colors = d3.scaleOrdinal(d3.schemeTableau10);
+    let colors = d3.scaleOrdinal(d3.schemeSet3);
+
+    export let selectedIndex = -1;
 </script>
 
 <style>
-    
     svg {
         max-width: 20em;
         margin-block: 2em;
 
         /* Do not clip shapes outside the viewBox */
         overflow: visible;
+    }
+
+    svg:has(path:hover) {
+        path:not(:hover) {
+            opacity: 50%;
+        }
+    }
+
+    path {
+        transition: 300ms;
+        cursor: pointer;
     }
 
     .container {
@@ -58,19 +70,31 @@
             gap: 0.5em;
         }
     }
+
+    .selected {
+        /* --color: oklch(60% 45% 0) !important; */
+        --color: var(--color-accent);
+
+        &:is(path) {
+            fill: var(--color);
+        }
+    }
 </style>
 
 <div class="container">
-
+    
     <svg viewBox="-50 -50 100 100">
          {#each arcs as arc, i}
-            <path d={arc} fill={colors(i)}/>
+            <path d={arc} fill={colors(i)} 
+                on:click={e => selectedIndex = (selectedIndex===i) ? -1 : i}
+                class:selected={selectedIndex === i}/>
         {/each}
     </svg>
 
     <ul class="legend">
         {#each data as d, i}
-        <li style="--color: {colors(i)}">
+        <li style="--color: {colors(i)}"
+            class:selected={selectedIndex === i}>
             <span class="swatch"></span>
                 {d.label} <em>({d.value})</em>
             </li>
