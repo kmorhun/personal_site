@@ -13,27 +13,40 @@
     let query = "";
     
     $: filteredProjects = projects.filter(project => {
+        
+        let allValues = Object.values(project).join("\n").toLowerCase();
         if (query) {
-            return project.title.includes(query) || project.description.includes(query);
+            return allValues.includes(query.toLowerCase());
         }
 
         return true;
     }); 
 
-    // console.log(projects);
-    // console.log(rolledData);
+    let pieData;
+    let rolledData;
 
-    let rolledData = d3.rollups(projects, v => v.length, d => d.year);
-    let pieData = rolledData.map(([year, count]) => ({label: year, value: count}));
+    $: {
+        pieData = {};
+        rolledData = {};
+        rolledData = d3.rollups(filteredProjects, v => v.length, d => d.year);
+        pieData = rolledData.map(([year, count]) => ({label: year, value: count}));
+    }
     
-    </script>
+</script>
+
+<style>
+  input {
+    width: 100%;
+    margin: 1em 0;
+  }  
+</style>
 
 <article class="content">
-    <h1>What am I working on? At least {projects.length} things!</h1>
+    <h1>What am I working on? At least {filteredProjects.length} things!</h1>
     
+    <Pie data={pieData}/>
     <input type="search" bind:value={query}
         aria-label="Search projects" placeholder="🔍 Search projects…" />
     
-    <Pie data={pieData}/>
-    <Projects list={filteredProjects}/>
+        <Projects list={filteredProjects}/>
 </article>
