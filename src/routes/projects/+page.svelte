@@ -39,7 +39,7 @@
 
     let filteredByYear;
     
-    $: filteredByYear = projects.filter(project => {
+    $: filteredByYear = filteredProjects.filter(project => {
         
         if (selectedYearIndex > -1) {
             return project.year === selectedYear;
@@ -64,5 +64,5 @@
     <input type="search" bind:value={query}
         aria-label="Search projects" placeholder="🔍 Search projects…" />
     
-    <Projects list={filteredByYear}/>
+    <Projects list={filteredProjects}/>
 </article>
