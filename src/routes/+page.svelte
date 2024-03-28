@@ -18,22 +18,6 @@
 };
 </script>
 
-<style>
-    dl {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-    }
-    dt {
-        grid-row: 1/2;
-    }
-
-    dd {
-        grid-row: 2/3;
-        font-size: 2.0rem;
-        margin: 0;
-    }
-</style>
-
 <article class="content">
     <h1>Привіт! Welcome!</h1>
     <div id="intro-content">
@@ -73,7 +57,7 @@
         {#await response.json()}
             <p>Decoding...</p>
         {:then data}
-            <dl>
+            <dl class="stats">
                 <dt>Followers</dt>
                 <dd>{data.followers}</dd>
                 <dt>Following</dt>

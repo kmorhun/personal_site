@@ -118,4 +118,22 @@ input, textarea, button, select {
 #resume-skills-body p{
     margin: 5px;
 }
+
+/* Stats */
+dl.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    
+    dt {
+        grid-row: 1/2;
+    }
+    
+    dd {
+        grid-row: 2/3;
+        font-size: 2.0rem;
+        margin: 0;
+    }
+}
+
+
    
