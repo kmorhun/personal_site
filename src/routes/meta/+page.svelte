@@ -7,6 +7,7 @@
         autoPlacement,
         offset,
     } from '@floating-ui/dom';
+    import Pie from '$lib/Pie.svelte';
     
     let data = [];
     let commits = [];
@@ -147,7 +148,7 @@
     $: brushSelection = null;
 
     function brushed (evt) {
-        console.log(evt);
+        // console.log(evt);
         brushSelection = evt.selection;
     }
 
@@ -166,6 +167,28 @@
         d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
     }
 
+    let selectedCommits, hasSelection, selectedLines;
+    $: {
+        selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
+        // console.log("SelectedCommits", selectedCommits);
+    }
+    $: {
+        hasSelection = brushSelection && selectedCommits.length > 0;
+        // console.log("hasSelection", hasSelection);
+    }
+    $: {
+        selectedLines = (hasSelection ? selectedCommits : commits).flatMap(d => d.lines);
+        // console.log("selectedLines", selectedLines);
+    }
+
+    let languageBreakdown;
+    $: {
+        languageBreakdown = d3.rollups(selectedLines, v => v.length, d => d.type);
+        // console.log(languageBreakdown);
+    }
+
+    $: pieData = Array.from(languageBreakdown).map(([language, lines]) => ({label: language.toUpperCase(), value: lines}))
+    const percentFormat = d3.format(".1~%");
 </script>
 
 <style>
@@ -307,4 +330,12 @@
             {/each}
         </g>
     </svg>
+    <p>{hasSelection ? selectedCommits.length : "No"} commits selected</p>
+    <!-- <dl class="stats">
+        {#each languageBreakdown as [language, lines]}
+            <dt>{language.toUpperCase()}</dt>
+            <dd>{lines} lines ({percentFormat(lines/selectedLines.length)})</dd>
+        {/each}
+    </dl> -->
+    <Pie data={pieData}/>
 </article>
