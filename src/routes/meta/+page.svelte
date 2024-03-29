@@ -1,4 +1,5 @@
 <script>
+    // TODO: tooltips populating weirdly
     import * as d3 from 'd3';
     import { onMount } from "svelte";
     import {
@@ -140,11 +141,50 @@
         }
     }
 
+    // set up brushing
+    let svg;
+    let brushSelection;
+    $: brushSelection = null;
+
+    function brushed (evt) {
+        console.log(evt);
+        brushSelection = evt.selection;
+    }
+
+    function isCommitSelected (commit) {
+        if (!brushSelection) return false;
+        let [[x0, y0], [x1, y1]] = brushSelection;
+        let x = xScale(commit.datetime);
+        let y = yScale(commit.hourFrac);
+        return x0 <= x && x <= x1 && y0 <= y && y <= y1;
+    }
+
+    $: {
+        d3.select(svg).call(d3.brush().on("start brush end", brushed));
+        // bring the dots to the front of the layers of svgs
+        // ~ selects elements after this selector but still in the same parent
+        d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
+    }
+
 </script>
 
 <style>
     svg {
         overflow: visible;
+    }
+
+    svg :global(.selection) {
+        fill-opacity: 10%;
+        stroke: black;
+        stroke-opacity: 70%;
+        stroke-dasharray: 5 3;
+        animation: marching-ants 2s linear infinite; 
+    }
+
+    @keyframes marching-ants {
+        to {
+            stroke-dashoffset: -8; /*5+3*/
+        }
     }
 
     .gridlines {
@@ -153,7 +193,7 @@
 
     dl.info {
         display: grid;
-        background-color: oklch(100% 0% 0 / 50%);
+        background-color: oklch(100% 0% 0 / 70%);
         box-shadow: 10px 5px 5px oklch(0% 0% 0 / 30%);
         border-radius: 5px;
         backdrop-filter: blur(5px);
@@ -171,7 +211,7 @@
             grid-column: 1;
             text-align: right;
             text-transform: uppercase;
-            color: grey;    
+            color: rgb(87, 87, 87);    
             font-weight: bold;       
         }
 
@@ -199,6 +239,10 @@
         &:not(:hover) {
             fill-opacity: 0.6;
         }
+    }
+
+    circle.selected {
+        fill: var(--color-accent);
     }
 </style>
 
@@ -237,7 +281,8 @@
     </dl>
 
     <h2>Commits by time of day</h2>
-    <svg viewBox="0 0 {width} {height}">
+    <svg viewBox="0 0 {width} {height}"
+        bind:this={svg}>
         <!-- move the position of the axes to respect the margins -->
         <g class="gridlines" transform="translate({usableArea.left}, 0)" bind:this={yAxisGridlines}/>
         <g transform="translate(0, {usableArea.bottom})" bind:this={xAxis}/>
@@ -253,6 +298,7 @@
                     aria-describedby="commit-tooltip"
                     role="tooltip"
                     aria-haspopup="true"
+                    class:selected={isCommitSelected(commit)}
                     on:mouseenter={evt => dotInteraction(index, evt)}
                     on:mouseleave={evt => dotInteraction(index, evt)}
                     on:focus={evt => dotInteraction(index, evt)}
