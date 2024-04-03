@@ -1,5 +1,4 @@
 <script>
-    // TODO: tooltips populating weirdly
     import * as d3 from 'd3';
     import { onMount } from "svelte";
     import {
@@ -114,6 +113,7 @@
 
     // tooltip information
     let hoveredIndex = -1;
+    let hovering = -1;
     $: hoveredCommit = commits[hoveredIndex] ?? {};
 
     // let cursor = {x: 0, y: 0};
@@ -133,12 +133,13 @@
         if (evt.type === "mouseenter" || evt.type === "focus") {
             // dot hovered
             hoveredIndex = index;
+            hovering = 1;
             // cursor = {x: evt.x, y: evt.y};
         }
 
         else if (evt.type === "mouseleave" || evt.type === "blur") {
             // dot unhovered
-            hoveredIndex = -1;
+            hovering = -1;
         }
     }
 
@@ -288,7 +289,7 @@
     <dl id="commit-tooltip" 
         class="info tooltip"
         bind:this={commitTooltip}
-        hidden={hoveredIndex === -1}
+        hidden={hovering === -1}
         style="top: {tooltipPosition.y}px; left: {tooltipPosition.x}px"
     >
         <dt>Commit</dt>
