@@ -21,17 +21,18 @@
         "url": "https://gender-analysis.readthedocs.io/en/latest/index.html"
     },
     {
-        "title": "Data-Centered AI to reduce Bias and Uncertainty in SS-VAE's",
+        "title": "Reducing Bias and Uncertainty in SS-VAE's",
         "year": "2022",
         "image": "/images/faces.png",
         "description": "Winner of the third Lab challenge in MIT's 6.S191: Introduction to Deep Learning, I detected and reduced bias and uncertainty in a Semi-Supervised Variational Auto-Encoder with the Capsa library",
         "url": "https://docs.google.com/document/d/1HOvvuJEdsX3OUfUsW4AZVhR4Zxqhq2I5v6o2DjHk9Ko/edit?usp=sharing"
     },
     {
-        "title": "Title5",
+        "title": "Bikewatch",
         "year": "2024",
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Description5"
+        "image": "/images/bikewatch.png",
+        "description": "An interactive map of the Boston and Cambridge bike lanes, and BlueBike station traffic!",
+        "url": "https://kmorhun.github.io/bikewatch/"
     },
     {
         "title": "Title6",
