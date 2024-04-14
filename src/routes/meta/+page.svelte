@@ -50,10 +50,24 @@
         
     });
     
+    //  filter commits
+    let commitMaxTime;
+    let filteredCommits = [];
+    let filteredLines = [];
+    $: commitMaxTime = timeScale.invert(commitProgress);
+    $: {
+        filteredCommits = commits.filter(d => d.datetime <= commitMaxTime);
+        console.log("filteredCommits", filteredCommits);
+    }
+    $: {
+        filteredLines = data.filter(d => d.datetime <= commitMaxTime);
+        console.log("filteredLines", filteredLines);
+    }
+    
     // get most frequent time of day
     let workByPeriod = [];
     $: {
-        workByPeriod = d3.rollups(data, v => v.length, 
+        workByPeriod = d3.rollups(filteredLines, v => v.length, 
         d => d.datetime.toLocaleString("en", {dayPeriod: "short"})
         );
         // console.log(workByPeriod);
@@ -61,7 +75,7 @@
     
     let workByDay = [];
     $: {
-        workByDay = d3.rollups(data, v => v.length, 
+        workByDay = d3.rollups(filteredLines, v => v.length, 
         d => d.datetime.toLocaleString("en", {weekday: "long"})
         );
         // console.log(workByDay);
@@ -91,15 +105,15 @@
         .range([usableArea.bottom, usableArea.top]);
     
     $: xScale = d3.scaleTime()
-        .domain(d3.extent(data, d => d.datetime))
+        .domain(d3.extent(filteredLines, d => d.datetime))
         .range([usableArea.left, usableArea.right])
         .nice();
     
     $: rScale = d3.scaleSqrt()
         .domain(d3.extent(commits, d => d.totalLines))
         .range([5, 20]); 
-
-    $: {
+        
+        $: {
         d3.select(xAxis).call(d3.axisBottom(xScale));
         d3.select(yAxis).call(d3.axisLeft(yScale).tickFormat(d => String(d % 24).padStart(2, "0") + ":00"));
     }
@@ -114,7 +128,7 @@
     // tooltip information
     let hoveredIndex = -1;
     let hovering = -1;
-    $: hoveredCommit = commits[hoveredIndex] ?? {};
+    $: hoveredCommit = filteredCommits[hoveredIndex] ?? {};
 
     // let cursor = {x: 0, y: 0};
     let commitTooltip;
@@ -143,7 +157,7 @@
         }
 
         else if (evt.type === "click" || (evt.type === "keyup" && evt.key === "enter")) {
-            selectedCommits = [commits[index]];
+            selectedCommits = [filteredCommits[index]];
         }
     }
 
@@ -155,7 +169,7 @@
         let brushSelection = evt.selection;
 
         // update selected commits when brushed called
-        selectedCommits = !brushSelection ? [] : commits.filter(commit => {
+        selectedCommits = !brushSelection ? [] : filteredCommits.filter(commit => {
 		let min = {x: brushSelection[0][0], y: brushSelection[0][1]};
 		let max = {x: brushSelection[1][0], y: brushSelection[1][1]};
 		let x = xScale(commit.date);
@@ -184,7 +198,7 @@
         // console.log("hasSelection", hasSelection);
     }
     $: {
-        selectedLines = (hasSelection ? selectedCommits : commits).flatMap(d => d.lines);
+        selectedLines = (hasSelection ? selectedCommits : filteredCommits).flatMap(d => d.lines);
         // console.log("selectedLines", selectedLines);
     }
 
@@ -196,6 +210,14 @@
 
     $: pieData = Array.from(languageBreakdown).map(([language, lines]) => ({label: language.toUpperCase(), value: lines}))
     const percentFormat = d3.format(".1~%");
+
+    // set up time scale for commit progress
+    let commitProgress = 100;
+    $: timeScale = d3.scaleTime()
+        .domain(d3.extent(commits, d => d.datetime))
+        .range([0, 100]);
+
+
 </script>
 
 <style>
@@ -274,19 +296,37 @@
     circle.selected {
         fill: var(--color-accent);
     }
+
+    label {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+
+        input {
+            flex: 1;
+        }
+    }
+
+    #commitRange {
+        display: flex;
+        flex-direction: column;
+        text-align: right;
+        margin-bottom: 1em;
+    }
+
 </style>
 
 <article class="content">
     <h1>Meta</h1>
     <p>A visual deep dive into the code of this website!</p>
-    <!-- <p>Total lines of code: {data.length}</p> -->
+    <!-- <p>Total lines of code: {filteredLines.length}</p> -->
     <dl class="stats">
         <dt>Total <abbr title="Lines of Code">LOC</abbr></dt>
-        <dd>{data.length}</dd>
+        <dd>{filteredLines.length}</dd>
         <dt>Commits</dt>
-        <dd>{commits.length}</dd>
+        <dd>{filteredCommits.length}</dd>
         <dt>Files</dt>
-        <dd>{d3.group(data, d => d.file).size}</dd>
+        <dd>{d3.group(filteredLines, d => d.file).size}</dd>
         <dt>Most Frequent Time of Day</dt>
         <dd>{maxPeriod}</dd>
         <dt>Most Frequent Day</dt>
@@ -311,6 +351,15 @@
     </dl>
 
     <h2>Commits by time of day</h2>
+
+    <label>
+        Show commits until: 
+        <input type="range" min="0" max="100" step="1" bind:value={commitProgress}/>
+    </label>
+    <div id="commitRange">
+        <time>{commitMaxTime.toLocaleString("en", {dateStyle: "long", timeStyle: "short"})}</time>
+    </div>
+
     <svg viewBox="0 0 {width} {height}"
         bind:this={svg}>
         <!-- move the position of the axes to respect the margins -->
@@ -318,7 +367,7 @@
         <g transform="translate(0, {usableArea.bottom})" bind:this={xAxis}/>
         <g transform="translate({usableArea.left}, 0)" bind:this={yAxis}/>
         <g class="dots">
-            {#each commits as commit, index}
+            {#each filteredCommits as commit, index}
                 <circle
                     cx={xScale(commit.datetime)}
                     cy={yScale(commit.hourFrac)}
