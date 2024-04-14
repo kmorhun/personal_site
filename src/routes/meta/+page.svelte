@@ -141,24 +141,32 @@
             // dot unhovered
             hovering = -1;
         }
+
+        else if (evt.type === "click" || (evt.type === "keyup" && evt.key === "enter")) {
+            selectedCommits = [commits[index]];
+        }
     }
 
     // set up brushing
     let svg;
-    let brushSelection;
-    $: brushSelection = null;
 
     function brushed (evt) {
         // console.log(evt);
-        brushSelection = evt.selection;
+        let brushSelection = evt.selection;
+
+        // update selected commits when brushed called
+        selectedCommits = !brushSelection ? [] : commits.filter(commit => {
+		let min = {x: brushSelection[0][0], y: brushSelection[0][1]};
+		let max = {x: brushSelection[1][0], y: brushSelection[1][1]};
+		let x = xScale(commit.date);
+		let y = yScale(commit.hourFrac);
+
+		return x >= min.x && x <= max.x && y >= min.y && y <= max.y;
+	    });
     }
 
     function isCommitSelected (commit) {
-        if (!brushSelection) return false;
-        let [[x0, y0], [x1, y1]] = brushSelection;
-        let x = xScale(commit.datetime);
-        let y = yScale(commit.hourFrac);
-        return x0 <= x && x <= x1 && y0 <= y && y <= y1;
+        return selectedCommits.includes(commit);
     }
 
     $: {
@@ -169,12 +177,10 @@
     }
 
     let selectedCommits, hasSelection, selectedLines;
+    selectedCommits = [];
+
     $: {
-        selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
-        // console.log("SelectedCommits", selectedCommits);
-    }
-    $: {
-        hasSelection = brushSelection && selectedCommits.length > 0;
+        hasSelection = selectedCommits.length > 0;
         // console.log("hasSelection", hasSelection);
     }
     $: {
@@ -325,6 +331,8 @@
                     class:selected={isCommitSelected(commit)}
                     on:mouseenter={evt => dotInteraction(index, evt)}
                     on:mouseleave={evt => dotInteraction(index, evt)}
+                    on:click={evt => dotInteraction(index, evt)}
+                    on:keyup={evt => dotInteraction(index, evt)}
                     on:focus={evt => dotInteraction(index, evt)}
                     on:blur={evt => dotInteraction(index, evt)}
                 />

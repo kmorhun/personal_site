@@ -6,15 +6,20 @@
     export let data = [];
     let total = 0;
 
+    
     for (let d of data) {
         total += d;
     }
 
-    let arcData;
-    let arcs;
-    let sliceGenerator = d3.pie().value(d => d.value);
-    $: arcData = sliceGenerator(data);
-    $: arcs = arcData.map(d => arcGenerator(d));
+    let pieData;
+    $: {
+        pieData = data.map(d => ({...d}));
+        let sliceGenerator = d3.pie().value(d => d.value);
+        let arcData = sliceGenerator(data);
+        let arcs = arcData.map(d => arcGenerator(d));
+        pieData = pieData.map((d, i) => ({...d, ...arcData[i], arc: arcs[i]}));
+    }
+    
     let colors = d3.scaleOrdinal(d3.schemeSet3);
 
     export let selectedIndex = -1;
@@ -103,8 +108,8 @@
 <div class="container">
     
     <svg viewBox="-50 -50 100 100">
-         {#each arcs as arc, i}
-            <path d={arc} fill={colors(i)} 
+         {#each pieData as d, i}
+            <path d={d.arc} fill={colors(d.label)} 
                 on:click={e => toggleWedge(i, e)}
                 on:keyup={e => toggleWedge(i, e)}
                 class:selected={selectedIndex === i}
@@ -112,14 +117,14 @@
                 role="button"
                 aria-label:button
                 style="
-                    --start-angle: { arcData[i]?.startAngle }rad;
-                    --end-angle: { arcData[i]?.endAngle }rad;"/>
+                    --start-angle: { d.arc?.startAngle }rad;
+                    --end-angle: { d.arc?.endAngle }rad;"/>
         {/each}
     </svg>
 
     <ul class="legend">
-        {#each data as d, i}
-        <li style="--color: {colors(i)}">
+        {#each pieData as d, i}
+        <li style="--color: {colors(d.label)}">
             <span class="swatch"
                 class:selected={selectedIndex === i}></span>
                 {d.label} <em>({d.value})</em>
