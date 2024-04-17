@@ -4,20 +4,41 @@
     let arcGenerator = d3.arc().innerRadius(0).outerRadius(50);
 
     export let data = [];
+    let oldData = []; // keep track of old data for transitions
     let total = 0;
 
     
     for (let d of data) {
         total += d;
     }
+    
+    // mapping data labels to DOM elements representing each wedge
+    let wedges = {};
+    $: console.log(wedges);
+
+    function transitionArcs() {
+
+    }
 
     let pieData;
     $: {
+        oldData = pieData;
+        // make a copy of data
         pieData = data.map(d => ({...d}));
-        let sliceGenerator = d3.pie().value(d => d.value);
+
+        // sort the data by label
+        pieData = d3.sort(pieData, d => d.label);
+
+        // prevent the arcs from sorting by value by default
+        let sliceGenerator = d3.pie().value(d => d.value).sort(null);
+        
         let arcData = sliceGenerator(data);
         let arcs = arcData.map(d => arcGenerator(d));
+        
         pieData = pieData.map((d, i) => ({...d, ...arcData[i], arc: arcs[i]}));
+        
+        // runs whenever the data changes
+        transitionArcs();
     }
     
     export let colors = d3.scaleOrdinal(d3.schemeSet3);
@@ -29,6 +50,7 @@
             selectedIndex = (selectedIndex===index) ? -1 : index;
         }
     }
+
 </script>
 
 <style>
@@ -49,6 +71,8 @@
     path {
         /* allows interpolating any property the browser can interpolate */
         transition: 300ms;
+        /* transition-property: transform, opacity, fill; */
+
         transform: rotate(var(--mid-angle))
             translateY(0)
             rotate(calc(-1*var(--mid-angle)));
@@ -63,6 +87,8 @@
                 translateY(-6px) scale(1.1)
                 rotate(calc(-1*var(--mid-angle)));
         }
+
+        /* fill-opacity: 0.75; */
     }
 
     .container {
@@ -109,8 +135,10 @@
 <div class="container">
     
     <svg viewBox="-50 -50 100 100">
-         {#each pieData as d, i}
-            <path d={d.arc} fill={colors(d.label)} 
+        <!-- key by label to eliminate flashing -->
+        {#each pieData as d, i (d.label)}
+            <path d={d.arc} fill={colors(d.id ?? d.label)} 
+                bind:this={wedges[d.label]}
                 on:click={e => toggleWedge(i, e)}
                 on:keyup={e => toggleWedge(i, e)}
                 class:selected={selectedIndex === i}
@@ -125,7 +153,7 @@
 
     <ul class="legend">
         {#each pieData as d, i}
-        <li style="--color: {colors(d.label)}">
+        <li style="--color: {colors(d.id ?? d.label)}">
             <span class="swatch"
                 class:selected={selectedIndex === i}></span>
                 {d.label} <em>({d.value})</em>

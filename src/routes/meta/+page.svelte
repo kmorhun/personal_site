@@ -109,14 +109,13 @@
 
     let languageBreakdown;
     $: {
-        // console.log("selectedLines", selectedLines);
         languageBreakdown = d3.rollups(selectedLines, v => v.length, d => d.type);
         // console.log(languageBreakdown);
     }
 
     let pieData;
     $: {
-        pieData = Array.from(languageBreakdown).map(([language, lines]) => ({label: language.toUpperCase(), value: lines}));
+        pieData = Array.from(languageBreakdown).map(([language, lines]) => ({label: language.toUpperCase(), id: language, value: lines}));
         // console.log("piedata", pieData);
     }
     const percentFormat = d3.format(".1~%");
