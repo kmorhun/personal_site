@@ -291,6 +291,12 @@
         &:not(:hover) {
             fill-opacity: 0.6;
         }
+
+        @starting-style {
+            /* make css transitions fire when circles appear */
+            /* doesn't work in firefox */
+            r:0;
+        }
     }
 
     circle.selected {
@@ -367,7 +373,7 @@
         <g transform="translate(0, {usableArea.bottom})" bind:this={xAxis}/>
         <g transform="translate({usableArea.left}, 0)" bind:this={yAxis}/>
         <g class="dots">
-            {#each filteredCommits as commit, index}
+            {#each filteredCommits as commit, index (commit.id)}
                 <circle
                     cx={xScale(commit.datetime)}
                     cy={yScale(commit.hourFrac)}
