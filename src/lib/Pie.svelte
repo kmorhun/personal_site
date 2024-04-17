@@ -20,7 +20,7 @@
         pieData = pieData.map((d, i) => ({...d, ...arcData[i], arc: arcs[i]}));
     }
     
-    let colors = d3.scaleOrdinal(d3.schemeSet3);
+    export let colors = d3.scaleOrdinal(d3.schemeSet3);
 
     export let selectedIndex = -1;
 
@@ -47,6 +47,7 @@
     }
 
     path {
+        /* allows interpolating any property the browser can interpolate */
         transition: 300ms;
         transform: rotate(var(--mid-angle))
             translateY(0)
@@ -115,7 +116,7 @@
                 class:selected={selectedIndex === i}
                 tabindex="0"
                 role="button"
-                aria-label:button
+                aria-label="button"
                 style="
                     --start-angle: { d.arc?.startAngle }rad;
                     --end-angle: { d.arc?.endAngle }rad;"/>

@@ -118,6 +118,11 @@
         &:not(:hover) {
             fill-opacity: 0.6;
         }
+
+        @starting-style {
+            r: 0;
+        }
+
     }
 
     circle.selected {

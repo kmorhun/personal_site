@@ -1,14 +1,18 @@
 <dl class="files">
     <!-- iterate over keyed each block to avoid datapoints moving around too much -->
     {#each files as file (file.name)}
-        <div>
+        <div animate:flip={{duration: 1000}}>
             <dt>
                 <code>{file.name}</code>
                 <small>{file.lines.length} lines</small>
             </dt>
             <dd>
                 {#each file.lines as line (line.line) }
-                    <div class="line" style="--color: {colors(line.type)}"></div>
+                    <div 
+                        class="line" 
+                        style="--color: {colors(line.type)}"
+                        in:scale
+                    />
                 {/each}
             </dd>
         </div>
@@ -54,7 +58,7 @@
         display: flex;
         width: 0.5em;
         aspect-ratio: 1;
-        background: steelblue;
+        background: var(--color);
         border-radius: 50%;
     }
 
@@ -63,6 +67,8 @@
 
 <script>
     import * as d3 from 'd3';
+    import { scale } from 'svelte/transition';
+    import { flip as originalFlip } from 'svelte/animate';
 
     export let lines = [];
     let files = [];
@@ -73,5 +79,11 @@
         files = d3.sort(files, d => -d.lines.length);
     }
 
-    let colors = d3.scaleOrdinal(d3.schemeSet3);
+    export let colors = d3.scaleOrdinal(d3.schemeSet3);
+
+    // force flip to update whenever files changes, rather than every time the slider changes
+    function getFlip() {
+        return originalFlip;
+    }
+    $: flip = getFlip(files); // forces a rerun when files changes
 </script>

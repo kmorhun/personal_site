@@ -12,6 +12,7 @@
     
     let data = [];
     let commits = [];
+    let colors = d3.scaleOrdinal(d3.schemeSet3);
     onMount(async () => {
         data = await d3.csv("loc.csv", row => ({
             ...row,
@@ -66,11 +67,11 @@
     let filteredLines = [];
     $: {
         filteredCommits = commits.filter(d => d.datetime <= commitMaxTime);
-        console.log("filteredCommits", filteredCommits);
+        // console.log("filteredCommits", filteredCommits);
     }
     $: {
         filteredLines = data.filter(d => d.datetime <= commitMaxTime);
-        console.log("filteredLines", filteredLines);
+        // console.log("filteredLines", filteredLines);
     }
     
     // get most frequent time of day
@@ -108,11 +109,16 @@
 
     let languageBreakdown;
     $: {
+        // console.log("selectedLines", selectedLines);
         languageBreakdown = d3.rollups(selectedLines, v => v.length, d => d.type);
         // console.log(languageBreakdown);
     }
 
-    $: pieData = Array.from(languageBreakdown).map(([language, lines]) => ({label: language.toUpperCase(), value: lines}))
+    let pieData;
+    $: {
+        pieData = Array.from(languageBreakdown).map(([language, lines]) => ({label: language.toUpperCase(), value: lines}));
+        // console.log("piedata", pieData);
+    }
     const percentFormat = d3.format(".1~%");
 
 </script>
@@ -164,8 +170,8 @@
         <time>{commitMaxTime.toLocaleString("en", {dateStyle: "long", timeStyle: "short"})}</time>
     </div>
 
-    <FileLines lines={filteredLines} />
+    <FileLines lines={filteredLines} colors={colors}/>
     <Scatterplot commits={filteredCommits} lines={filteredLines} bind:selectedCommits={selectedCommits} />
 
-    <Pie data={pieData}/>
+    <Pie data={pieData} colors={colors}/>
 </article>
