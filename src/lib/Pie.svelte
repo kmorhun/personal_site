@@ -15,22 +15,45 @@
     // mapping data labels to DOM elements representing each wedge
     let wedges = {};
     $: console.log(wedges);
-
+    
+    export let transitionDuration = 300;
     function transitionArcs() {
+        let wedgeElements = Object.values(wedges);
 
+        d3.selectAll(wedgeElements).transition("arc")
+            .duration(transitionDuration)
+            .styleTween("d", function (_, index) {
+                let wedge = this;
+
+                // get the label of the wedge
+                let label = Object.keys(wedges)[index];
+
+                let d = pieData.find(d => d.label === label);
+                let d_old = oldData.find(d => d.label === label);
+                if (!d || !d_old) { // if that wedge doesn't exist
+                    return;
+                }
+
+                let from = {...d_old};
+                let to = {...d};
+                let angleInterpolator = d3.interpolate(from, to);
+                let interpolator = t => `path("${ arcGenerator(angleInterpolator(t)) }")`;
+
+                return interpolator;
+            });
     }
+
+    // prevent the arcs from sorting by value by default
+    let sliceGenerator = d3.pie().value(d => d.value).sort(null);
 
     let pieData;
     $: {
         oldData = pieData;
         // make a copy of data
         pieData = data.map(d => ({...d}));
-
+        
         // sort the data by label
         pieData = d3.sort(pieData, d => d.label);
-
-        // prevent the arcs from sorting by value by default
-        let sliceGenerator = d3.pie().value(d => d.value).sort(null);
         
         let arcData = sliceGenerator(data);
         let arcs = arcData.map(d => arcGenerator(d));
@@ -50,6 +73,7 @@
             selectedIndex = (selectedIndex===index) ? -1 : index;
         }
     }
+
 
 </script>
 
@@ -71,7 +95,7 @@
     path {
         /* allows interpolating any property the browser can interpolate */
         transition: 300ms;
-        /* transition-property: transform, opacity, fill; */
+        transition-property: transform, opacity, fill;
 
         transform: rotate(var(--mid-angle))
             translateY(0)
@@ -87,8 +111,6 @@
                 translateY(-6px) scale(1.1)
                 rotate(calc(-1*var(--mid-angle)));
         }
-
-        /* fill-opacity: 0.75; */
     }
 
     .container {
