@@ -1,15 +1,11 @@
 <script>
     import * as d3 from 'd3';
     import { onMount } from "svelte";
-    import {
-        computePosition,
-        autoPlacement,
-        offset,
-    } from '@floating-ui/dom';
     import Pie from '$lib/Pie.svelte';
     import Scatterplot from '$lib/Scatterplot.svelte';
     import FileLines from '$lib/FileLines.svelte';
-    
+    import Scrolly from "svelte-scrolly";
+
     let data = [];
     let commits = [];
     let colors = d3.scaleOrdinal(d3.schemeSet3);
@@ -140,37 +136,58 @@
         margin-bottom: 1em;
     }
 
+    /* only affect the body of the meta page */
+    :global(body) {
+        max-width: min(120ch, 80vw);
+    }
 </style>
 
 <article class="content">
     <h1>Meta</h1>
     <p>A visual deep dive into the code of this website!</p>
-    <!-- <p>Total lines of code: {filteredLines.length}</p> -->
-    <dl class="stats">
-        <dt>Total <abbr title="Lines of Code">LOC</abbr></dt>
-        <dd>{filteredLines.length}</dd>
-        <dt>Commits</dt>
-        <dd>{filteredCommits.length}</dd>
-        <dt>Files</dt>
-        <dd>{d3.group(filteredLines, d => d.file).size}</dd>
-        <dt>Most Frequent Time of Day</dt>
-        <dd>{maxPeriod}</dd>
-        <dt>Most Frequent Day</dt>
-        <dd>{maxDay}</dd>
-    </dl>
     
-    <h2>Commits by time of day</h2>
+    <Scrolly bind:progress={commitProgress}>
 
-    <label>
-        Show commits until: 
-        <input type="range" min="0" max="100" step="1" bind:value={commitProgress}/>
-    </label>
-    <div id="commitRange">
-        <time>{commitMaxTime.toLocaleString("en", {dateStyle: "long", timeStyle: "short"})}</time>
-    </div>
+        {#each commits as commit, index }
+            <p>
+                On {commit.datetime.toLocaleString("en", {dateStyle: "full", timeStyle: "short"})},
+                I made <a href="{commit.url}" target="_blank">{ index > 0 ? 'another glorious commit' : 'my first commit, and it was glorious' }</a>.
+                I edited {commit.totalLines} lines across { d3.rollups(commit.lines, D => D.length, d => d.file).length } files.
+                Then I looked over all I had made, and I saw that it was very good.
+            </p>
+        {/each}
 
-    <FileLines lines={filteredLines} colors={colors}/>
-    <Scatterplot commits={filteredCommits} lines={filteredLines} bind:selectedCommits={selectedCommits} />
 
-    <Pie data={pieData} colors={colors}/>
+        <svelte:fragment slot="viz">
+            <!-- <p>Total lines of code: {filteredLines.length}</p> -->
+            <dl class="stats">
+                <dt>Total <abbr title="Lines of Code">LOC</abbr></dt>
+                <dd>{filteredLines.length}</dd>
+                <dt>Commits</dt>
+                <dd>{filteredCommits.length}</dd>
+                <dt>Files</dt>
+                <dd>{d3.group(filteredLines, d => d.file).size}</dd>
+                <dt>Most Frequent Time of Day</dt>
+                <dd>{maxPeriod}</dd>
+                <dt>Most Frequent Day</dt>
+                <dd>{maxDay}</dd>
+            </dl>
+            
+            <h2>Commits by time of day</h2>
+        
+            <label>
+                Show commits until: 
+                <input type="range" min="0" max="100" step="1" bind:value={commitProgress}/>
+            </label>
+            <div id="commitRange">
+                <time>{commitMaxTime.toLocaleString("en", {dateStyle: "long", timeStyle: "short"})}</time>
+            </div>
+        
+            <Scatterplot commits={filteredCommits} lines={filteredLines} bind:selectedCommits={selectedCommits} />
+            
+            <Pie data={pieData} colors={colors}/>
+            
+            <FileLines lines={filteredLines} colors={colors}/>
+        </svelte:fragment>
+    </Scrolly>
 </article>
