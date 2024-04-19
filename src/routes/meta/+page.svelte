@@ -50,7 +50,8 @@
     });
     
     // set up time scale for commit progress
-    let commitProgress = 100;
+    let raceProgress = 0; // for the filerace scrolly
+    let commitProgress = 100; // for the scatterplot scrolly
     let commitMaxTime;
     $: timeScale = d3.scaleTime()
         .domain(d3.extent(commits, d => d.datetime))
@@ -58,9 +59,13 @@
     
     $: commitMaxTime = timeScale.invert(commitProgress);
     
+    let fileRaceMaxTime;
+    $: fileRaceMaxTime = timeScale.invert(raceProgress);
+
     //  filter commits
     let filteredCommits = [];
     let filteredLines = [];
+    let filteredRaceLines = [];
     $: {
         filteredCommits = commits.filter(d => d.datetime <= commitMaxTime);
         // console.log("filteredCommits", filteredCommits);
@@ -69,6 +74,10 @@
         filteredLines = data.filter(d => d.datetime <= commitMaxTime);
         // console.log("filteredLines", filteredLines);
     }
+    $: {
+        filteredRaceLines = data.filter(d => d.datetime <= fileRaceMaxTime);
+    }
+
     
     // get most frequent time of day
     let workByPeriod = [];
@@ -99,7 +108,7 @@
         // console.log("hasSelection", hasSelection);
     }
     $: {
-        selectedLines = (hasSelection ? selectedCommits : commits).flatMap(d => d.lines);
+        selectedLines = (hasSelection ? selectedCommits : filteredCommits).flatMap(d => d.lines);
         // console.log("selectedLines", selectedLines);
     }
 
@@ -145,9 +154,22 @@
 <article class="content">
     <h1>Meta</h1>
     <p>A visual deep dive into the code of this website!</p>
+    <dl class="stats">
+        <dt>Total <abbr title="Lines of Code">LOC</abbr></dt>
+        <dd>{filteredLines.length}</dd>
+        <dt>Commits</dt>
+        <dd>{filteredCommits.length}</dd>
+        <dt>Files</dt>
+        <dd>{d3.group(filteredLines, d => d.file).size}</dd>
+        <dt>Most Frequent Time of Day</dt>
+        <dd>{maxPeriod}</dd>
+        <dt>Most Frequent Day</dt>
+        <dd>{maxDay}</dd>
+    </dl>
     
     <Scrolly bind:progress={commitProgress}>
 
+        <!-- The narrative component -->
         {#each commits as commit, index }
             <p>
                 On {commit.datetime.toLocaleString("en", {dateStyle: "full", timeStyle: "short"})},
@@ -159,35 +181,48 @@
 
 
         <svelte:fragment slot="viz">
+            <!-- The visualization component -->
             <!-- <p>Total lines of code: {filteredLines.length}</p> -->
-            <dl class="stats">
-                <dt>Total <abbr title="Lines of Code">LOC</abbr></dt>
-                <dd>{filteredLines.length}</dd>
-                <dt>Commits</dt>
-                <dd>{filteredCommits.length}</dd>
-                <dt>Files</dt>
-                <dd>{d3.group(filteredLines, d => d.file).size}</dd>
-                <dt>Most Frequent Time of Day</dt>
-                <dd>{maxPeriod}</dd>
-                <dt>Most Frequent Day</dt>
-                <dd>{maxDay}</dd>
-            </dl>
             
             <h2>Commits by time of day</h2>
         
-            <label>
+            <!-- <label>
                 Show commits until: 
                 <input type="range" min="0" max="100" step="1" bind:value={commitProgress}/>
             </label>
             <div id="commitRange">
                 <time>{commitMaxTime.toLocaleString("en", {dateStyle: "long", timeStyle: "short"})}</time>
-            </div>
+            </div> -->
+
+            <!-- TODO: add the date to the actual browser scrollbar thumb -->
         
             <Scatterplot commits={filteredCommits} lines={filteredLines} bind:selectedCommits={selectedCommits} />
             
             <Pie data={pieData} colors={colors}/>
             
-            <FileLines lines={filteredLines} colors={colors}/>
         </svelte:fragment>
+    </Scrolly>
+
+    <br/>
+    
+    <Scrolly bind:progress={raceProgress} --scrolly-layout="viz-first"  throttle=500>
+        <!-- The flip doesn't work on firefox -->
+        
+        <!-- the narrative component -->
+
+        {#each commits as commit, index }
+            <p>
+                On {commit.datetime.toLocaleString("en", {dateStyle: "full", timeStyle: "short"})},
+                I made <a href="{commit.url}" target="_blank">{ index > 0 ? 'another glorious commit' : 'my first commit, and it was glorious' }</a>.
+                I edited {commit.totalLines} lines across { d3.rollups(commit.lines, D => D.length, d => d.file).length } files.
+                Then I looked over all I had made, and I saw that it was very good.
+            </p>
+        {/each}
+
+        <svelte:fragment slot="viz">
+            <!-- the visual component -->
+            <FileLines lines={filteredRaceLines} colors={colors}/>
+        </svelte:fragment>
+
     </Scrolly>
 </article>

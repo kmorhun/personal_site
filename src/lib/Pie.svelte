@@ -127,7 +127,7 @@
 
 <style>
     svg {
-        max-width: 20em;
+        max-width: 10em;
         margin-block: 2em;
 
         /* Do not clip shapes outside the viewBox */
