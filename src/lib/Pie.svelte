@@ -29,7 +29,8 @@
                 let label = Object.keys(wedges)[index];
                 let transition = transitionArc(wedge, label);
                 return transition?.interpolator;
-            });
+            })
+            .ease(d3.easeLinear);
     }
 
     function getEmptyArc (label, data = pieData) {
@@ -64,7 +65,7 @@
     function sameArc (a, b) {
         let sameAngles = a?.startAngle === b?.startAngle && a?.endAngle === b?.endAngle;
         let falsy = !a && !b;
-        return sameAngles || falsy;
+        return falsy;
     }
 
     function transitionArc (wedge, label) {
@@ -77,13 +78,14 @@
         // if (sameArc(d_old, d)) { // if the arcs are the same, don't transition
         //     return null;
         // }
+
         if (!d || !d_old) { // if that wedge doesn't exist
             return;
         }
         let type = d ? (d_old ? "update" : "in") : "out";
 
         let from = d_old ? {...d_old} : getEmptyArc(label, oldData);
-        let to =  d ? {...d} : getEmptyArc(label, data);
+        let to =  d ? {...d} : getEmptyArc(label, pieData);
 
         let angleInterpolator = d3.interpolate(from, to);
         let interpolator = t => `path("${ arcGenerator(angleInterpolator(t)) }")`;
