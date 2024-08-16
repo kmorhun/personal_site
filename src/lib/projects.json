@@ -1,5 +1,19 @@
 [
     {
+        "title": "Stacky",
+        "year": "2024",
+        "image": "/images/stacky.png",
+        "description": "A Mastodon-based social media platform aiming for a less polarized and more pro-social social media experience, powered by both traditional machine learning and LLMs.",
+        "url": "https://jhustacky.vercel.app"
+    },
+    {
+        "title": "Anatomically Correct Life-sized Crochet Skeleton",
+        "year": "2024",
+        "image": "/images/skeleton.jpg",
+        "description": "A personal endeavor with a collection of friends to crochet a life-sized human skeleton, ligaments and all. The pattern comes from Luca Hodgins, and the funding from the Council for the Arts at MIT <3",
+        "url": "https://www.anatomicalcrochet.com/2022/06/life-sized-skeleton.html"
+    },
+    {
         "title": "Screening Tool for Equity Analysis of Projects (STEAP)",
         "year": "2023",
         "image": "/images/steap_screenshot.png",
