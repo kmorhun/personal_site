@@ -61,13 +61,13 @@
         margin-top: 2em;
     }
 
-    .spotted {
+    .link-list {
         margin-top: 1em;
         h3, p {
             margin: 0;
         }  
      
-        .spotted-links {
+        .links {
             display: flex;
             justify-content: flex-start;
             gap: 1em;
@@ -161,7 +161,7 @@
     <Projects list={projects.slice(0, 3)}/>
 
     <h2>Spot me in the wild</h2>
-    <div class="spotted">
+    <div class="link-list">
         <h3>JSALT final presentations - <span class="date">August 2024</span></h3>
        
         <p>
@@ -169,11 +169,11 @@
             final presentations, where my team and I showcased our work on Stacky! To watch the full Stacky team's presentation, watch from 4:38:00 onward. 
             To watch my presentation, specifically, watch 6:18:00-6:30:00 and 6:45:00-6:49:00
         </p>
-        <div class="spotted-links">
+        <div class="links">
             <a href="https://www.youtube.com/watch?v=65L7tklQbyc" target="_blank"><i class="fa-solid fa-video"></i>Watch</a>
         </div>
     </div>
-    <div class="spotted">
+    <div class="link-list">
         <h3>Roots of Resilience: Ukraine Exhibition - <span class="date">July 2024</span></h3>
         <p>
             In Spring 2024, I took a course at MIT called 
@@ -182,18 +182,49 @@
             NGOs in the newly liberated Eastern Ukrainian city of Sviatohirsk to help them develop a plan for recovery and community-building. 
             This video showcases the final exhibition of our work.
         </p>
-        <div class="spotted-links">
+        <div class="links">
             <a href="https://www.youtube.com/watch?v=qKzzjjaNmAo" target="_blank"><i class="fa-solid fa-video"></i>Watch</a>
         </div>
     </div>
-    <div class="spotted">
+    <div class="link-list">
         <h3>Blog Post: Social Impact Internships - <span class="date">September 2022</span></h3>
         <p>
             A blog post I wrote reflecting on my experiences during my internship at FindOurView and how they intersect 
             with my career aspirations, as well as my competitive ballroom dancing. 
         </p>
-        <div class="spotted-links">
+        <div class="links">
             <a href="https://pkgcenter.mit.edu/2022/09/14/social-impact-internships-kateryna-morhun-25/" target="_blank"><i class="fa-solid fa-globe"></i>Read</a>
         </div>
     </div>
+
+    <h2>What I'm reading</h2>
+    <div class="link-list">
+        <h3>Is My Toddler a Stochastic Parrot? - by Angie Wang</h3>
+        <p>
+            A Gorgeously drawn New Yorker Comic created by a new mother musing on the similarties - 
+            and differences - between her toddler and ChatGPT
+        </p>
+        <div class="links">
+            <a href="https://www.newyorker.com/humor/sketchbook/is-my-toddler-a-stochastic-parrot" target="_blank"><i class="fa-solid fa-globe"></i>Read</a>
+        </div>
+    </div>
+    <div class="link-list">
+        <h3>A Man Said to the Universe - by Stephen Crane</h3>
+        <p>
+            "Sir, I Exist!"
+        </p>
+        <div class="links">
+            <a href="https://www.poetryfoundation.org/poems/44049/a-man-said-to-the-universe" target="_blank"><i class="fa-solid fa-globe"></i>Read</a>
+        </div>
+    </div>
+    <div class="link-list">
+        <h3>Do Not Go Gentle into That Good Night - by Dylan Thomas</h3>
+        <p>
+            Old age should burn and rave at close of day;
+        </p>
+        <div class="links">
+            <a href="https://www.poetryfoundation.org/poems/46569/do-not-go-gentle-into-that-good-night" target="_blank"><i class="fa-solid fa-globe"></i>Read</a>
+        </div>
+    </div>
+
 </article>
