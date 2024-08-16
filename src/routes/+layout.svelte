@@ -8,7 +8,6 @@
         {url: "./cv", title: "CV"},
         {url: "./contact", title: "Contact"},
         {url: "./meta", title: "Meta"},
-        {url: "https://github.com/kmorhun", title: "Follow Me on Github~"},
     ];
 
     // let colorScheme = "light dark";
@@ -29,9 +28,21 @@
         right: 1rem;
         font-size: 80%;
     }
+
+    .warning {
+        max-width: 100%;
+        margin: 1em;
+        padding: 0.5em;
+        border-radius: 10px;
+        background-color: color-mix(in oklch, var(--color-accent), canvas 50%);
+    }
 </style>
 
 <Nav info={pages} />
+
+<div class="warning">
+    This site is always a work in progress, but aren't we all?
+</div>
 
 <label class="switch">
     Theme:
