@@ -57,6 +57,26 @@
         max-width: 40%;
     }
 
+    h2 {
+        margin-top: 2em;
+    }
+
+    .spotted {
+        margin-top: 1em;
+        h3, p {
+            margin: 0;
+        }  
+     
+        .spotted-links {
+            display: flex;
+            justify-content: flex-start;
+            gap: 1em;
+
+            i {
+                margin-right: 0.5em;
+            }
+        }
+    }
 </style>
 
 <article class="content">
@@ -139,4 +159,41 @@
     
     <h2>A peek at what I'm working on...</h2>
     <Projects list={projects.slice(0, 3)}/>
+
+    <h2>Spot me in the wild</h2>
+    <div class="spotted">
+        <h3>JSALT final presentations - <span class="date">August 2024</span></h3>
+       
+        <p>
+            Day two of the Frederick Jelinek Memorial Summer Workshop on Speech and Language Technology (JSALT) 
+            final presentations, where my team and I showcased our work on Stacky! To watch the full Stacky team's presentation, watch from 4:38:00 onward. 
+            To watch my presentation, specifically, watch 6:18:00-6:30:00 and 6:45:00-6:49:00
+        </p>
+        <div class="spotted-links">
+            <a href="https://www.youtube.com/watch?v=65L7tklQbyc" target="_blank"><i class="fa-solid fa-video"></i>Watch</a>
+        </div>
+    </div>
+    <div class="spotted">
+        <h3>Roots of Resilience: Ukraine Exhibition - <span class="date">July 2024</span></h3>
+        <p>
+            In Spring 2024, I took a course at MIT called 
+            Circular Recovery Strategies of Wartime Ukraine: History and Urban Planning for a Ukrainian City,
+            taught by Elizabeth Wood and Kateryna Lopatiuk. In this course, we collaborated with the local leadership and 
+            NGOs in the newly liberated Eastern Ukrainian city of Sviatohirsk to help them develop a plan for recovery and community-building. 
+            This video showcases the final exhibition of our work.
+        </p>
+        <div class="spotted-links">
+            <a href="https://www.youtube.com/watch?v=qKzzjjaNmAo" target="_blank"><i class="fa-solid fa-video"></i>Watch</a>
+        </div>
+    </div>
+    <div class="spotted">
+        <h3>Blog Post: Social Impact Internships - <span class="date">September 2022</span></h3>
+        <p>
+            A blog post I wrote reflecting on my experiences during my internship at FindOurView and how they intersect 
+            with my career aspirations, as well as my competitive ballroom dancing. 
+        </p>
+        <div class="spotted-links">
+            <a href="https://pkgcenter.mit.edu/2022/09/14/social-impact-internships-kateryna-morhun-25/" target="_blank"><i class="fa-solid fa-globe"></i>Read</a>
+        </div>
+    </div>
 </article>

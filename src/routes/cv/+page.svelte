@@ -2,54 +2,6 @@
 	<title>CV</title>
 </svelte:head>
 
-<style>
-    #resume {
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        margin: 5%;
-    }
-
-    #resume h3 {
-        margin: 5px;
-    }
-
-    #resume-header {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    #resume-header h2 {
-        margin: 5px;
-    }
-
-    #resume-head a {
-        margin: 5px;
-    }
-
-    .resume-entry-header {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-    }
-
-    .resume-entry-header h4 {
-        margin: 5px;
-    }
-
-    .resume-entry-header p {
-        margin: 5px;
-    }
-
-    .resume-entry-header-right {
-        text-align: right;
-    }
-
-    #resume-skills-body p{
-        margin: 5px;
-    }
-</style>
 <!-- 
     <article class="resume-entry">
         <div class="resume-entry-header">
