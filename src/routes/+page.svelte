@@ -21,8 +21,8 @@
 
 <style>
     #quick-facts {
-        /* reduce line height */
         h1 {
+            margin-top: 0;
             margin-bottom: 0;
         }
 
@@ -45,6 +45,16 @@
                 margin-right: 1em;
             }
         }
+    }
+
+    #selfie {
+        width: 100%;
+        height: 100%;
+        float: right;
+        border-radius: 5%;
+        margin-right: 5%;
+        margin-left: 3%;
+        max-width: 40%;
     }
 
 </style>
@@ -128,5 +138,5 @@
     {/await}
     
     <h2>A peek at what I'm working on...</h2>
-    <Projects list={projects.slice(0, 2)}/>
+    <Projects list={projects.slice(0, 3)}/>
 </article>

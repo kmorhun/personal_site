@@ -31,7 +31,7 @@
 
     .warning {
         max-width: 100%;
-        margin: 1em;
+        margin-top: 1em;
         padding: 0.5em;
         border-radius: 10px;
         background-color: color-mix(in oklch, var(--color-accent), canvas 50%);
@@ -40,8 +40,10 @@
 
 <Nav info={pages} />
 
-<div class="warning">
-    This site is always a work in progress, but aren't we all?
+<div class="content">
+    <div class="warning">
+        This site is always a work in progress, but aren't we all?
+    </div>
 </div>
 
 <label class="switch">

@@ -29,97 +29,10 @@ img {
 
 .content {
     padding: 2em;
+    padding-top: 0;
 }
 
-
-/* CONTACT PAGE */
-
-#contact-title {
-    text-align: center;
-}
-
-form {
-    margin: auto;
-    max-width: 50ch;
-    display: grid;
-    gap: 1em;
-    /* grid-template-columns: auto 1fr; */
-    grid-template-columns: subgrid;
-    
-    label {
-        display: grid;
-        grid-template-columns: .2fr 1fr;
-    }
-
-    button {
-        grid-column: 1 / -1;
-    }
-}
-
-input, textarea, button, select {
-    font: inherit;
-}
-
-/* INTRO PAGE */
-#selfie {
-    width: 100%;
-    height: 100%;
-    float: right;
-    border-radius: 5%;
-    margin-right: 5%;
-    margin-left: 3%;
-    max-width: 40%;
-}
-
-/* RESUME FORMATTING */
-#resume {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    margin: 5%;
-}
-
-#resume h3 {
-    margin: 5px;
-}
-
-#resume-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-#resume-header h2 {
-    margin: 5px;
-}
-
-#resume-head a {
-    margin: 5px;
-}
-
-.resume-entry-header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-
-.resume-entry-header h4 {
-    margin: 5px;
-}
-
-.resume-entry-header p {
-    margin: 5px;
-}
-
-.resume-entry-header-right {
-    text-align: right;
-}
-
-#resume-skills-body p{
-    margin: 5px;
-}
-
-/* Stats */
+/* Used in both the Meta page and the Home page */
 dl.stats {
     display: grid;
     gap: 1em;
@@ -133,6 +46,3 @@ dl.stats {
         margin: 0;
     }
 }
-
-
-   
