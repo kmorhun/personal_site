@@ -61,7 +61,7 @@
     <h1>What am I working on? At least {filteredProjects.length} things!</h1>
     
     <Pie data={pieData} bind:selectedIndex={selectedYearIndex}/>
-    <input type="search" bind:value={query}
+    <input type="search" bind:value={query} on:click={umami.track('search-projects')}
         aria-label="Search projects" placeholder="🔍 Search projects…" />
     
     <Projects list={filteredProjects}/>

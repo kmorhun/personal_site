@@ -39,6 +39,6 @@
         <label>Body:
             <textarea id="body" name="body" required></textarea>
         </label>
-        <button>Submit!</button>
+        <button id="submit-email" on:click={umami.track('submit-email')}>Submit!</button>
     </form>
 </article>

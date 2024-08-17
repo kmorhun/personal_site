@@ -16,7 +16,7 @@
 		public_repos: 100,
 		public_gists: 100,
 	})
-};
+    };
 </script>
 
 <style>
@@ -87,15 +87,15 @@
         <div id="profile-links">
             <span class="profile-link">
                 <i class="fa fa-envelope"></i>
-                <a href="mailto:kmorhun@mit.edu" target="_blank">kmorhun[at]mit[dot]edu</a>
+                <a id="email-link" href="mailto:kmorhun@mit.edu" target="_blank" on:click={() => umami.track('email-link')}>kmorhun[at]mit[dot]edu</a>
             </span>
             <span class="profile-link">
                 <i class="fa-brands fa-linkedin"></i>
-                <a href="https://www.linkedin.com/in/morhunkateryna/" target="_blank">LinkedIn</a>
+                <a id="linkedin-link" href="https://www.linkedin.com/in/morhunkateryna/" target="_blank" on:click={() => umami.track('linkedin-link')}>LinkedIn</a>
             </span>
             <span class="profile-link">
                 <i class="fa-brands fa-github"></i>
-                <a href="https://github.com/kmorhun" target="_blank">Github</a>
+                <a id="github-link" href="https://github.com/kmorhun" target="_blank" on:click={() => umami.track('github-link')}>Github</a>
             </span>
         </div>
     </div>
@@ -170,7 +170,8 @@
             To watch my presentation, specifically, watch 6:18:00-6:30:00 and 6:45:00-6:49:00
         </p>
         <div class="links">
-            <a href="https://www.youtube.com/watch?v=65L7tklQbyc" target="_blank"><i class="fa-solid fa-video"></i>Watch</a>
+            <a id="jsalt-vid" href="https://www.youtube.com/watch?v=65L7tklQbyc" target="_blank" on:click={() => umami.track('jsalt-vid')}>
+                <i class="fa-solid fa-video"></i>Watch</a>
         </div>
     </div>
     <div class="link-list">
@@ -183,7 +184,8 @@
             This video showcases the final exhibition of our work.
         </p>
         <div class="links">
-            <a href="https://www.youtube.com/watch?v=qKzzjjaNmAo" target="_blank"><i class="fa-solid fa-video"></i>Watch</a>
+            <a id="ukrexhib-vid" href="https://www.youtube.com/watch?v=qKzzjjaNmAo" target="_blank" on:click={() => umami.track('ukrexhib-vid')}>
+                <i class="fa-solid fa-video"></i>Watch</a>
         </div>
     </div>
     <div class="link-list">
@@ -193,7 +195,8 @@
             with my career aspirations, as well as my competitive ballroom dancing. 
         </p>
         <div class="links">
-            <a href="https://pkgcenter.mit.edu/2022/09/14/social-impact-internships-kateryna-morhun-25/" target="_blank"><i class="fa-solid fa-globe"></i>Read</a>
+            <a id="pkg-blog" href="https://pkgcenter.mit.edu/2022/09/14/social-impact-internships-kateryna-morhun-25/" target="_blank" on:click={() => umami.track('pkg-blog')}>
+                <i class="fa-solid fa-globe"></i>Read</a>
         </div>
     </div>
 
@@ -205,7 +208,8 @@
             and differences - between her toddler and ChatGPT
         </p>
         <div class="links">
-            <a href="https://www.newyorker.com/humor/sketchbook/is-my-toddler-a-stochastic-parrot" target="_blank"><i class="fa-solid fa-globe"></i>Read</a>
+            <a id="stochasticparrot-article" href="https://www.newyorker.com/humor/sketchbook/is-my-toddler-a-stochastic-parrot" target="_blank" on:click={() => umami.track('stochasticparrot-article')}>
+                <i class="fa-solid fa-globe"></i>Read</a>
         </div>
     </div>
     <div class="link-list">
@@ -214,7 +218,8 @@
             "Sir, I Exist!"
         </p>
         <div class="links">
-            <a href="https://www.poetryfoundation.org/poems/44049/a-man-said-to-the-universe" target="_blank"><i class="fa-solid fa-globe"></i>Read</a>
+            <a id="sir-i-exist-poem" href="https://www.poetryfoundation.org/poems/44049/a-man-said-to-the-universe" target="_blank" on:click={() => umami.track('sir-i-exist-poem')}>
+                <i class="fa-solid fa-globe"></i>Read</a>
         </div>
     </div>
     <div class="link-list">
@@ -223,7 +228,8 @@
             Old age should burn and rave at close of day;
         </p>
         <div class="links">
-            <a href="https://www.poetryfoundation.org/poems/46569/do-not-go-gentle-into-that-good-night" target="_blank"><i class="fa-solid fa-globe"></i>Read</a>
+            <a id="do-not-go-gentle-poem" href="https://www.poetryfoundation.org/poems/46569/do-not-go-gentle-into-that-good-night" target="_blank" on:click={() => umami.track('do-not-go-gentle-poem')}>
+                <i class="fa-solid fa-globe"></i>Read</a>
         </div>
     </div>
 
