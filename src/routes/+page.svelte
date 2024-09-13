@@ -204,7 +204,7 @@
     <div class="link-list">
         <h3>Is My Toddler a Stochastic Parrot? - by Angie Wang</h3>
         <p>
-            A Gorgeously drawn New Yorker Comic created by a new mother musing on the similarties - 
+            A Gorgeously drawn New Yorker Comic created by a new mother musing on the similarities - 
             and differences - between her toddler and ChatGPT
         </p>
         <div class="links">
