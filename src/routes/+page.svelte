@@ -162,6 +162,20 @@
 
     <h2>Spot me in the wild</h2>
     <div class="link-list">
+        <h3>News Article: Thinking on Your Feet - <span class="date">February 2025</span></h3>
+       
+        <p>
+            A news article from MIT News about the class I participated in during Fall 2024 called
+            Thinking on Your Feet: Dance as a Learning Science, taught by Jennifer Light. The class explores how dance and movement
+            can be used as a pedagogical tool to teach other subjects, ranging from cultural history to 
+            pipelined processors, in an embodied way.
+        </p>
+        <div class="links">
+            <a id="thinking-on-your-feet-article" href="https://news.mit.edu/2025/body-of-knowledge-0214" target="_blank" on:click={() => umami.track('thinking-on-your-feet-article')}>
+                <i class="fa-solid fa-globe"></i>Read</a>
+        </div>
+    </div>
+    <div class="link-list">
         <h3>JSALT final presentations - <span class="date">August 2024</span></h3>
        
         <p>
@@ -175,7 +189,7 @@
         </div>
     </div>
     <div class="link-list">
-        <h3>Roots of Resilience: Ukraine Exhibition - <span class="date">July 2024</span></h3>
+        <h3>Ukraine Exhibition: Roots of Resilience - <span class="date">July 2024</span></h3>
         <p>
             In Spring 2024, I took a course at MIT called 
             Circular Recovery Strategies of Wartime Ukraine: History and Urban Planning for a Ukrainian City,
