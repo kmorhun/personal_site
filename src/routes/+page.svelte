@@ -247,4 +247,15 @@
         </div>
     </div>
 
+    <div class="link-list">
+        <h3>Workshop - by Billy Collins</h3>
+        <p>
+            I might as well begin by saying how much I like the title.
+        </p>
+        <div class="links">
+            <a id="workshop-poem" href="https://www.poetryfoundation.org/poems/46704/workshop" target="_blank" on:click={() => umami.track('workshop-poem')}>
+                <i class="fa-solid fa-globe"></i>Read</a>
+        </div>
+    </div>
+
 </article>
