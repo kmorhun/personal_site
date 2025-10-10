@@ -24,5 +24,5 @@
     </article> 
 -->
 <article class="content">
-    <iframe id="pdf-js-viewer" src="/pdfjs/web/viewer.html?file=/assets/pdf/summer2024_cv.pdf" title="webviewer" frameborder="0" width="100%" height="600"></iframe>    
+    <iframe id="pdf-js-viewer" src="/pdfjs/web/viewer.html?file=/assets/pdf/fall2025_cv.pdf" title="webviewer" frameborder="0" width="100%" height="600"></iframe>    
 </article>
