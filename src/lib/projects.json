@@ -1,5 +1,12 @@
 [
     {
+        "title": "Ukrainian Scrabble",
+        "year": "2025",
+        "image": "/images/scrabble.png",
+        "description": "A work-in-progress extension on Sergii Gryshkevych's single-player Ukrainian Scrabble which upgrades it to modern React/webpack, and adds multiplayer functionality",
+        "url": "https://github.com/kmorhun/scrabble-ukr"
+    },
+    {
         "title": "Stacky",
         "year": "2024",
         "image": "/images/stacky.png",
