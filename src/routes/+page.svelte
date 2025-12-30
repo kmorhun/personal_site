@@ -162,6 +162,18 @@
 
     <h2>Spot me in the wild</h2>
     <div class="link-list">
+        <h3>MIT 6A presentations - <span class="date">November 2025</span></h3>
+       
+        <p>
+            This video showcases a collection of final presentations from MIT's 6A Master's program, 
+            where I presented on my work developing an upgraded contextual speeding detector. To watch my presentation, specifically, watch from 24:35-32:20
+        </p>
+        <div class="links">
+            <a id="6a-presentation" href="https://drive.google.com/file/d/1TE3s-eh2vDG5atT9sd6eKcoKRjwAzidy/view?usp=sharing" target="_blank" on:click={() => umami.track('6a-presentation')}>
+                <i class="fa-solid fa-video"></i>Watch</a>
+        </div>
+    </div>
+    <div class="link-list">
         <h3>News Article: Thinking on Your Feet - <span class="date">February 2025</span></h3>
        
         <p>
