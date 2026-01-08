@@ -7,6 +7,23 @@
     import projects from '$lib/projects.json';
     import Project from '$lib/Project.svelte';
     import Projects from '../lib/Projects.svelte';
+    import { onMount } from 'svelte';
+
+    // Umami is not available during server-side rendering, only on the client
+    let umamiAvailable = false;
+
+    onMount(() => {
+        // This svelte lifecycle function only runs once the component is first rendered in the client
+        // So this keeps umami unavailable until server-side rendering is complete
+        umamiAvailable = typeof umami !== 'undefined';
+    });
+
+    function submitEvent(eventName) {
+        if (umamiAvailable && umami?.track) {
+            umami.track(eventName);
+        }
+    }
+    // end umami tracking logic
 
     let profileData = {
 	ok: true,
@@ -87,15 +104,15 @@
         <div id="profile-links">
             <span class="profile-link">
                 <i class="fa fa-envelope"></i>
-                <a id="email-link" href="mailto:kmorhun@mit.edu" target="_blank" on:click={() => umami.track('email-link')}>kmorhun[at]mit[dot]edu</a>
+                <a id="email-link" href="mailto:kmorhun@mit.edu" target="_blank" on:click={() => submitEvent('email-link')}>kmorhun[at]mit[dot]edu</a>
             </span>
             <span class="profile-link">
                 <i class="fa-brands fa-linkedin"></i>
-                <a id="linkedin-link" href="https://www.linkedin.com/in/morhunkateryna/" target="_blank" on:click={() => umami.track('linkedin-link')}>LinkedIn</a>
+                <a id="linkedin-link" href="https://www.linkedin.com/in/morhunkateryna/" target="_blank" on:click={() => submitEvent('linkedin-link')}>LinkedIn</a>
             </span>
             <span class="profile-link">
                 <i class="fa-brands fa-github"></i>
-                <a id="github-link" href="https://github.com/kmorhun" target="_blank" on:click={() => umami.track('github-link')}>Github</a>
+                <a id="github-link" href="https://github.com/kmorhun" target="_blank" on:click={() => submiEvent('github-link')}>Github</a>
             </span>
         </div>
     </div>
@@ -169,7 +186,7 @@
             where I presented on my work developing an upgraded contextual speeding detector. To watch my presentation, specifically, watch from 24:35-32:20
         </p>
         <div class="links">
-            <a id="6a-presentation" href="https://drive.google.com/file/d/1TE3s-eh2vDG5atT9sd6eKcoKRjwAzidy/view?usp=sharing" target="_blank" on:click={() => umami.track('6a-presentation')}>
+            <a id="6a-presentation" href="https://drive.google.com/file/d/1TE3s-eh2vDG5atT9sd6eKcoKRjwAzidy/view?usp=sharing" target="_blank" on:click={() => submitEvent('6a-presentation')}>
                 <i class="fa-solid fa-video"></i>Watch</a>
         </div>
     </div>
@@ -183,7 +200,7 @@
             pipelined processors, in an embodied way.
         </p>
         <div class="links">
-            <a id="thinking-on-your-feet-article" href="https://news.mit.edu/2025/body-of-knowledge-0214" target="_blank" on:click={() => umami.track('thinking-on-your-feet-article')}>
+            <a id="thinking-on-your-feet-article" href="https://news.mit.edu/2025/body-of-knowledge-0214" target="_blank" on:click={() => submitEvent('thinking-on-your-feet-article')}>
                 <i class="fa-solid fa-globe"></i>Read</a>
         </div>
     </div>
@@ -196,7 +213,7 @@
             To watch my presentation, specifically, watch 6:18:00-6:30:00 and 6:45:00-6:49:00
         </p>
         <div class="links">
-            <a id="jsalt-vid" href="https://www.youtube.com/watch?v=65L7tklQbyc" target="_blank" on:click={() => umami.track('jsalt-vid')}>
+            <a id="jsalt-vid" href="https://www.youtube.com/watch?v=65L7tklQbyc" target="_blank" on:click={() => submitEvent('jsalt-vid')}>
                 <i class="fa-solid fa-video"></i>Watch</a>
         </div>
     </div>
@@ -210,7 +227,7 @@
             This video showcases the final exhibition of our work.
         </p>
         <div class="links">
-            <a id="ukrexhib-vid" href="https://www.youtube.com/watch?v=qKzzjjaNmAo" target="_blank" on:click={() => umami.track('ukrexhib-vid')}>
+            <a id="ukrexhib-vid" href="https://www.youtube.com/watch?v=qKzzjjaNmAo" target="_blank" on:click={() => submitEvent('ukrexhib-vid')}>
                 <i class="fa-solid fa-video"></i>Watch</a>
         </div>
     </div>
@@ -221,7 +238,7 @@
             with my career aspirations, as well as my competitive ballroom dancing. 
         </p>
         <div class="links">
-            <a id="pkg-blog" href="https://pkgcenter.mit.edu/2022/09/14/social-impact-internships-kateryna-morhun-25/" target="_blank" on:click={() => umami.track('pkg-blog')}>
+            <a id="pkg-blog" href="https://pkgcenter.mit.edu/2022/09/14/social-impact-internships-kateryna-morhun-25/" target="_blank" on:click={() => submitEvent('pkg-blog')}>
                 <i class="fa-solid fa-globe"></i>Read</a>
         </div>
     </div>
@@ -234,7 +251,7 @@
             and differences - between her toddler and ChatGPT
         </p>
         <div class="links">
-            <a id="stochasticparrot-article" href="https://www.newyorker.com/humor/sketchbook/is-my-toddler-a-stochastic-parrot" target="_blank" on:click={() => umami.track('stochasticparrot-article')}>
+            <a id="stochasticparrot-article" href="https://www.newyorker.com/humor/sketchbook/is-my-toddler-a-stochastic-parrot" target="_blank" on:click={() => submitEvent('stochasticparrot-article')}>
                 <i class="fa-solid fa-globe"></i>Read</a>
         </div>
     </div>
@@ -244,7 +261,7 @@
             "Sir, I Exist!"
         </p>
         <div class="links">
-            <a id="sir-i-exist-poem" href="https://www.poetryfoundation.org/poems/44049/a-man-said-to-the-universe" target="_blank" on:click={() => umami.track('sir-i-exist-poem')}>
+            <a id="sir-i-exist-poem" href="https://www.poetryfoundation.org/poems/44049/a-man-said-to-the-universe" target="_blank" on:click={() => submitEvent('sir-i-exist-poem')}>
                 <i class="fa-solid fa-globe"></i>Read</a>
         </div>
     </div>
@@ -254,7 +271,7 @@
             Old age should burn and rave at close of day;
         </p>
         <div class="links">
-            <a id="do-not-go-gentle-poem" href="https://www.poetryfoundation.org/poems/46569/do-not-go-gentle-into-that-good-night" target="_blank" on:click={() => umami.track('do-not-go-gentle-poem')}>
+            <a id="do-not-go-gentle-poem" href="https://www.poetryfoundation.org/poems/46569/do-not-go-gentle-into-that-good-night" target="_blank" on:click={() => submitEvent('do-not-go-gentle-poem')}>
                 <i class="fa-solid fa-globe"></i>Read</a>
         </div>
     </div>
@@ -265,7 +282,7 @@
             I might as well begin by saying how much I like the title.
         </p>
         <div class="links">
-            <a id="workshop-poem" href="https://www.poetryfoundation.org/poems/46704/workshop" target="_blank" on:click={() => umami.track('workshop-poem')}>
+            <a id="workshop-poem" href="https://www.poetryfoundation.org/poems/46704/workshop" target="_blank" on:click={() => submitEvent('workshop-poem')}>
                 <i class="fa-solid fa-globe"></i>Read</a>
         </div>
     </div>

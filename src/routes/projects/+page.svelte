@@ -9,6 +9,23 @@
     import Project from '$lib/Project.svelte';
     import Projects from '$lib/Projects.svelte';
     import Pie from '$lib/Pie.svelte';
+    import { onMount } from 'svelte';
+
+    // Umami is not available during server-side rendering, only on the client
+    let umamiAvailable = false;
+
+    onMount(() => {
+        // This svelte lifecycle function only runs once the component is first rendered in the client
+        // So this keeps umami unavailable until server-side rendering is complete
+        umamiAvailable = typeof umami !== 'undefined';
+    });
+
+    function trackSearch() {
+        if (umamiAvailable && umami?.track) {
+            umami.track('search-projects');
+        }
+    }
+    // end umami tracking logic
 
     let filteredProjects;
     let query = "";
@@ -61,7 +78,7 @@
     <h1>What am I working on? At least {filteredProjects.length} things!</h1>
     
     <Pie data={pieData} bind:selectedIndex={selectedYearIndex}/>
-    <input type="search" bind:value={query} on:click={umami.track('search-projects')}
+    <input type="search" bind:value={query} on:click={trackSearch}
         aria-label="Search projects" placeholder="🔍 Search projects…" />
     
     <Projects list={filteredProjects}/>

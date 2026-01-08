@@ -2,6 +2,25 @@
 	<title>Contact me!</title>
 </svelte:head>
 
+<script>
+    import { onMount } from 'svelte';
+
+    // Umami is not available during server-side rendering, only on the client
+    let umamiAvailable = false;
+
+    onMount(() => {
+        // This svelte lifecycle function only runs once the component is first rendered in the client
+        // So this keeps umami unavailable until server-side rendering is complete
+        umamiAvailable = typeof umami !== 'undefined';
+    });
+
+    function submitEmail() {
+        if (umamiAvailable && umami?.track) {
+            umami.track('submit-email');
+        }
+    }
+</script>
+
 <style>
     #contact-title {
         text-align: center;
@@ -39,6 +58,6 @@
         <label>Body:
             <textarea id="body" name="body" required></textarea>
         </label>
-        <button id="submit-email" on:click={umami.track('submit-email')}>Submit!</button>
+        <button id="submit-email" on:click={submitEmail}>Submit!</button>
     </form>
 </article>
