@@ -3,11 +3,11 @@
     import "../style.css";
     
     let pages = [
-        {url: "./", title: "Home"},
-        {url: "./projects", title: "Projects"},
-        {url: "./cv", title: "CV"},
-        {url: "./contact", title: "Contact"},
-        {url: "./meta", title: "Meta"},
+        {url: "/", title: "Home"},
+        {url: "/projects", title: "Projects"},
+        {url: "/cv", title: "CV"},
+        {url: "/contact", title: "Contact"},
+        {url: "/meta", title: "Meta"},
     ];
 
     // let colorScheme = "light dark";
