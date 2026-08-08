@@ -14,10 +14,25 @@
         umamiAvailable = typeof umami !== 'undefined';
     });
 
-    function submitEmail() {
+    function handleSubmit(event) {
         if (umamiAvailable && umami?.track) {
             umami.track('submit-email');
         }
+        // prevent the browser from building the URL so we can build it outselves
+        event.preventDefault();
+
+        // get the form element and its data
+        let form = event.target
+        let data = new FormData(form);
+
+        // build the new url
+        let url = form.action + "?";
+        for (let [name, value] of data) {
+        url += (name + "=" + value + "&")
+        }
+
+        //set the url of the browser. In this case, open the mailto link
+        location.href = url;
     }
 </script>
 
@@ -51,13 +66,13 @@
 
 <article class="content">
     <h1 id="contact-title">Get in touch!</h1>
-    <form action="mailto:kat.morhun@gmail.com">
+    <form action="mailto:kat.morhun@gmail.com" method="GET" on:submit={handleSubmit}>
         <label>Subject:
             <input type="text" id="subject" name="subject" required>
         </label>
         <label>Body:
             <textarea id="body" name="body" required></textarea>
         </label>
-        <button id="submit-email" on:click={submitEmail}>Submit!</button>
+        <button id="submit-email">Submit!</button>
     </form>
 </article>
