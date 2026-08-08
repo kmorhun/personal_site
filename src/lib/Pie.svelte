@@ -130,7 +130,7 @@
 <style>
     svg {
         max-width: 10em;
-        margin-block: 2em;
+        margin: 2em 0 2em 2em;
 
         /* Do not clip shapes outside the viewBox */
         overflow: visible;
@@ -168,6 +168,8 @@
     .container {
         display: flex;
         align-items: center;
+        width: 55%;
+        margin: auto;
     }
 
     .swatch {
