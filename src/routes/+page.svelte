@@ -9,6 +9,20 @@
     import Projects from '../lib/Projects.svelte';
     import { onMount } from 'svelte';
 
+    // Github Stats
+    let githubData = null;
+    let loading = true;
+    let error = null;
+
+    async function retrieveGithubData() {
+        // console.log("Mounted!");
+        let response = await fetch("https://api.github.com/users/kmorhun");
+        // console.log(response);
+        githubData = await response.json();
+        // console.log(githubData);
+        loading = false;
+    }
+
     // Umami is not available during server-side rendering, only on the client
     let umamiAvailable = false;
 
@@ -16,6 +30,7 @@
         // This svelte lifecycle function only runs once the component is first rendered in the client
         // So this keeps umami unavailable until server-side rendering is complete
         umamiAvailable = typeof umami !== 'undefined';
+        retrieveGithubData();
     });
 
     function submitEvent(eventName) {
@@ -24,16 +39,6 @@
         }
     }
     // end umami tracking logic
-
-    let profileData = {
-	ok: true,
-	json: async () => ({
-		followers: 100,
-		following: 100,
-		public_repos: 100,
-		public_gists: 100,
-	})
-    };
 </script>
 
 <style>
@@ -149,30 +154,20 @@
     </div>
 
     <h2>My GitHub Stats</h2>
-    {#await fetch("https://api.github.com/users/kmorhun") }
+    {#if loading}
         <p>Loading...</p>
-    {:then response}
-        {#await response.json()}
-            <p>Decoding...</p>
-        {:then data}
-            <dl class="stats">
-                <dt>Followers</dt>
-                <dd>{data.followers}</dd>
-                <dt>Following</dt>
-                <dd>{data.following}</dd>
-                <dt>Public Repos</dt>
-                <dd>{data.public_repos}</dd>
-            </dl>        
-        {:catch error}
-            <p class="error">
-                Something went wrong: {error.message}
-            </p>
-        {/await}
-    {:catch error}
-        <p class="error">
-            Something went wrong: {error.message}
-        </p>
-    {/await}
+    {:else if error}
+        <p class="error">Something went wrong: {error.message}</p>
+    {:else}
+        <dl class="stats">
+            <dt>Followers</dt>
+            <dd>{githubData.followers}</dd>
+            <dt>Following</dt>
+            <dd>{githubData.following}</dd>
+            <dt>Public Repos</dt>
+            <dd>{githubData.public_repos}</dd>
+        </dl> 
+    {/if}
     
     <h2>A peek at what I'm working on...</h2>
     <Projects list={projects.slice(0, 3)}/>
