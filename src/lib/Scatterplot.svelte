@@ -1,156 +1,23 @@
-<dl id="commit-tooltip" 
-    class="info tooltip"
-    bind:this={commitTooltip}
-    hidden={hovering === -1}
-    style="top: {tooltipPosition.y}px; left: {tooltipPosition.x}px"
->
-    <dt>Commit</dt>
-    <dd><a href="{hoveredCommit.url}" target="_blank">{hoveredCommit.id}</a></dd>
-    <dt>Date</dt>
-    <dd>{hoveredCommit.datetime?.toLocaleString("en", {date: "full"})}</dd>
-    <dt>Time</dt>
-    <dd>{hoveredCommit.datetime?.toLocaleString("en", {time: "short"})}</dd>
-    <dt>Author</dt>
-    <dd>{hoveredCommit.author}</dd>
-    <dt>Total Lines</dt>
-    <dd>{hoveredCommit.totalLines}</dd>
-</dl>
-<svg viewBox="0 0 {width} {height}" 
-        bind:this={svg}>
-    <!-- move the position of the axes to respect the margins -->
-    <g class="gridlines" transform="translate({usableArea.left}, 0)" bind:this={yAxisGridlines}/>
-    <g transform="translate(0, {usableArea.bottom})" bind:this={xAxis}/>
-    <g transform="translate({usableArea.left}, 0)" bind:this={yAxis}/>
-    <g class="dots">
-        {#each commits as commit, index (commit.id)}
-            <circle
-                cx={xScale(commit.datetime)}
-                cy={yScale(commit.hourFrac)}
-                r={rScale(commit.totalLines)}
-                fill="steelblue"
-                tabindex="0"
-                aria-describedby="commit-tooltip"
-                role="tooltip"
-                aria-haspopup="true"
-                class:selected={isCommitSelected(commit)}
-                on:mouseenter={evt => dotInteraction(index, evt)}
-                on:mouseleave={evt => dotInteraction(index, evt)}
-                on:click={evt => dotInteraction(index, evt)}
-                on:keyup={evt => dotInteraction(index, evt)}
-                on:focus={evt => dotInteraction(index, evt)}
-                on:blur={evt => dotInteraction(index, evt)}
-            />
-        {/each}
-    </g>
-</svg>
-
-<p>{selectedCommits ? selectedCommits.length : "No"} commits selected</p>
-
-
-<style>
-    svg {
-        overflow: visible;
-    }
-
-    svg :global(.selection) {
-        fill-opacity: 10%;
-        stroke: black;
-        stroke-opacity: 70%;
-        stroke-dasharray: 5 3;
-        animation: marching-ants 2s linear infinite; 
-    }
-
-    @keyframes marching-ants {
-        to {
-            stroke-dashoffset: -8; /*5+3*/
-        }
-    }
-
-    .gridlines {
-        stroke-opacity: 0.2;
-    }
-
-    dl.info {
-        display: grid;
-        background-color: oklch(100% 0% 0 / 70%);
-        box-shadow: 10px 5px 5px oklch(0% 0% 0 / 30%);
-        border-radius: 5px;
-        backdrop-filter: blur(5px);
-        padding: 1em;
-        transition-duration: 500ms;
-        transition-property: opacity, visibility;
-
-
-        &[hidden]:not(:hover, :focus-within) {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        dt {
-            grid-column: 1;
-            text-align: right;
-            text-transform: uppercase;
-            color: rgb(87, 87, 87);    
-            font-weight: bold;       
-        }
-
-        dd {
-            margin-left: 1em;
-            grid-column: 2;
-        }
-    }
-
-    .tooltip {
-        position: fixed;
-        top: 1em; 
-        left: 1em;
-    }
-
-    circle {
-        transition: 200ms;
-        transform-origin: center;
-        transform-box: fill-box;
-
-        &:hover {
-            transform: scale(1.5);
-        }
-
-        &:not(:hover) {
-            fill-opacity: 0.6;
-        }
-
-        @starting-style {
-            r: 0;
-        }
-
-    }
-
-    circle.selected {
-        fill: var(--color-accent);
-    }
-    
-    </style>
-
 <script>
     import * as d3 from 'd3';
-    import { onMount } from "svelte";
     import {
         computePosition,
         autoPlacement,
         offset,
     } from '@floating-ui/dom';
-    import Pie from '$lib/Pie.svelte';
+    import BarHorizontal from '$lib/BarHorizontal.svelte';
 
+    export let locData = []
     export let commits = [];
-    export let lines = [];
-    export let selectedCommits = [];
+    
+    // order commits in decending order for drawing order
+    commits = d3.sort(commits, d => -d.totalLines);
 
-    // physical setup of scatterplot
-    let width = 1000, height = 600;
-    let margin = {top: 10, right: 10, bottom: 30, left: 20};
-    let xAxis, yAxis;
-    let yAxisGridlines;
+    // viewport metadata
+    let width = 1000;
+    let height = 600;
 
+    let margin = { top: 20, right: 20, bottom: 30, left: 60 };
     let usableArea = {
         top: margin.top,
         right: width - margin.right,
@@ -160,97 +27,236 @@
     usableArea.width = usableArea.right - usableArea.left;
     usableArea.height = usableArea.bottom - usableArea.top;
 
-
+    // scales
+    $: [minDate, maxDate] = d3.extent(commits.map(d => d.date));
+    $: maxDatePlusOne = new Date(maxDate);
+    $: maxDatePlusOne.setDate(maxDatePlusOne.getDate() + 1);
+    $: [minLines, maxLines] = d3.extent(commits.map(d => d.totalLines)); 
+    
     $: yScale = d3.scaleLinear()
-        .domain([0, 24])
-        .range([usableArea.bottom, usableArea.top]);
+    .domain([24, 0])
+    .range([usableArea.bottom, usableArea.top]);
     
     $: xScale = d3.scaleTime()
-        .domain(d3.extent(lines, d => d.datetime))
-        .range([usableArea.left, usableArea.right])
-        .nice();
+    .domain([minDate, maxDatePlusOne])
+    .range([usableArea.left, usableArea.right])
+    .nice();
     
     $: rScale = d3.scaleSqrt()
-        .domain(d3.extent(commits, d => d.totalLines))
-        .range([5, 20]); 
+    .domain([minLines, maxLines])
+    .range([5, 30])
     
-    // set up axes
+    // axes
+    let xAxis, yAxis;
     $: {
         d3.select(xAxis).call(d3.axisBottom(xScale));
-        d3.select(yAxis).call(d3.axisLeft(yScale).tickFormat(d => String(d % 24).padStart(2, "0") + ":00"));
+        d3.select(yAxis).call(d3.axisLeft(yScale)
+        .tickFormat(d => String(d % 24).padStart(2, "0") + ":00"));
     }
-
+    
+    let yAxisGridlines;
     $: {
         d3.select(yAxisGridlines).call(
             d3.axisLeft(yScale)
             .tickFormat("")
-            .tickSize(-usableArea.width));
+            .tickSize(-usableArea.width)
+        );
     }
 
-    // tooltip information
-    let hoveredIndex = -1;
-    let hovering = -1;
-    $: hoveredCommit = commits[hoveredIndex] ?? {};
+    // brushing area
+    let svg;
+    $: {
+        d3.select(svg).call(d3.brush()
+        .extent([[usableArea.left, usableArea.top], [usableArea.right, usableArea.bottom]])
+        .on("start brush end", brushed));            // raise the other elements of the svg in front of the bushing area
+        d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
+    }
+    $: brushSelection = null;
+    $: brushedCommits = brushSelection ? commits.filter(isCommitBrushed) : [];
+    $: selectedCommits = Array.from(new Set([...clickedCommits, ...brushedCommits]));
+    
+    function brushed (evt) {
+        brushSelection = evt.selection;
+    }
 
-    // let cursor = {x: 0, y: 0};
+    function isCommitBrushed (commit) {
+        if (!brushSelection) {
+            return false;
+        }
+        else {
+            // Return true if commit is within brushSelection
+            // and false if not
+            let min = {x: brushSelection[0][0], y: brushSelection[0][1]};
+            let max = {x: brushSelection[1][0], y: brushSelection[1][1]};
+            let commitX = xScale(commit.date);
+            let commitY = yScale(commit.hourFrac);
+            return commitX >= min.x && commitX <= max.x && commitY >= min.y && commitY <= max.y;
+        }
+    }
+    
+    // selecting the right commit for the tooltip
+    let hoveredIndex = -1;
+    $: hoveredCommit = commits[hoveredIndex] ?? hoveredCommit ?? {};
     let commitTooltip;
     let tooltipPosition = {x: 0, y: 0};
     
-    //define behavior for dot interaction
     async function dotInteraction (index, evt) {
         let hoveredDot = evt.target;
-        tooltipPosition = await computePosition(hoveredDot, commitTooltip, {
-            strategy: "fixed", // because we use position: fixed
-            middleware: [
-                offset(5), // spacing from tooltip to dot
-                autoPlacement() // see https://floating-ui.com/docs/autoplacement
-            ],
-        })
-        
-        if (evt.type === "mouseenter" || evt.type === "focus") {
-            // dot hovered
+        if (evt.type === "mouseenter") {
             hoveredIndex = index;
-            hovering = 1;
-            // cursor = {x: evt.x, y: evt.y};
+            tooltipPosition = await computePosition(hoveredDot, commitTooltip, {
+                strategy: "fixed", // because we use position: fixed
+                middleware: [
+                    offset(5), // spacing from tooltip to dot
+                    autoPlacement() // see https://floating-ui.com/docs/autoplacement
+                ],
+            });        
         }
-
-        else if (evt.type === "mouseleave" || evt.type === "blur") {
-            // dot unhovered
-            hovering = -1;
+        else if (evt.type === "mouseleave") {
+            hoveredIndex = -1
         }
+        else if (evt.type === "click") {
+            let commit = commits[index]
+            if (!clickedCommits.includes(commit)) {
+                // Add the commit to the clickedCommits array
+                clickedCommits = [...clickedCommits, commit];
+            }
+            else {
+                // Remove the commit from the array
+                clickedCommits = clickedCommits.filter(c => c !== commit);
+            }
+        }
+            
+    }
+        
+    // clickable commits
+    let clickedCommits = [];
+    
+    //filtered bar graph
+    $: selectedLines = (selectedCommits.length > 0 ? selectedCommits.flatMap(d => d.lines) : locData);
+    $: selectedCounts = d3.rollup(
+        selectedLines,
+        v => v.length,
+        d => d.type
+    );
+    $: allTypes = Array.from(new Set(locData.map(d => d.type)));
+    $: barData = allTypes.map(type =>  ({ label: String(type), value: selectedCounts.get(type) || 0 }));
+    $: barTitle = selectedCommits.length == 0 ? "Lines of Code: Website Breakdown" : `Lines of Code: ${selectedCommits.length} Selected Commits`;
+    </script>
 
-        else if (evt.type === "click" || (evt.type === "keyup" && evt.key === "enter")) {
-            selectedCommits = [commits[index]];
+<div class="container">
+    <svg viewBox="0 0 {width} {height}" bind:this={svg}>
+        <g transform="translate(0, {usableArea.bottom})" bind:this={xAxis} />
+        <g class="gridlines" transform="translate({usableArea.left}, 0)" bind:this={yAxisGridlines} />
+        <g transform="translate({usableArea.left}, 0)" bind:this={yAxis} />
+        <g class="dots">
+            {#each commits as commit, index }
+                <circle
+                    on:mouseenter={evt => dotInteraction(index, evt)}
+                    on:mouseleave={evt => dotInteraction(index, evt)}
+                    on:click={ evt => dotInteraction(index, evt) }
+                    class:selected={ selectedCommits.includes(commit) }
+                    cx={ xScale(commit.datetime) }
+                    cy={ yScale(commit.hourFrac) }
+                    r={ rScale(commit.totalLines) }
+                    fill="steelblue"
+                />
+            {/each}
+        </g>  
+    </svg>
+</div>
+
+<dl class="info tooltip" 
+    bind:this={commitTooltip} 
+    hidden={hoveredIndex === -1} 
+    style="top: {tooltipPosition.y}px; left: {tooltipPosition.x}px"
+>
+	<dt>Commit</dt>
+	<dd><a href="{ hoveredCommit.url }" target="_blank">{ hoveredCommit.id }</a></dd>
+
+	<dt>Date</dt>
+	<dd>{ hoveredCommit.datetime?.toLocaleString("en", {dateStyle: "full"}) }</dd>
+
+	<!-- Add: Time, author, lines edited -->
+</dl>
+
+<BarHorizontal data={barData} title={barTitle}/>
+
+<style>
+	svg {
+		overflow: visible;
+	}
+
+    .gridlines {
+	    stroke-opacity: .2;
+    }
+
+    .dots {
+        fill-opacity: .7;
+    }
+
+    circle {
+        transition: 200ms;
+        &:hover {
+            fill: darkgreen;
         }
     }
 
-    // set up brushing
-    let svg;
-
-    function brushed (evt) {
-        // console.log(evt);
-        let brushSelection = evt.selection;
-
-        // update selected commits when brushed called
-        selectedCommits = !brushSelection ? [] : commits.filter(commit => {
-		let min = {x: brushSelection[0][0], y: brushSelection[0][1]};
-		let max = {x: brushSelection[1][0], y: brushSelection[1][1]};
-		let x = xScale(commit.date);
-		let y = yScale(commit.hourFrac);
-
-		return x >= min.x && x <= max.x && y >= min.y && y <= max.y;
-	    });
+    .selected {
+        fill: var(--color-accent);
     }
 
-    function isCommitSelected (commit) {
-        return selectedCommits.includes(commit);
+
+    dl.info {
+        display: grid;
+        background-color: color-mix(in oklch, oklch(100% 0% 0 / 70%), canvas 85%);
+        box-shadow: 10px 5px 5px oklch(0% 0% 0 / 30%);
+        border-radius: 5px;
+        backdrop-filter: blur(5px);
+        padding: 1em;
+
+        transition-duration: 300ms;
+        transition-property: opacity, visibility;
+
+        &[hidden]:not(:hover, :focus-within) {
+            opacity: 0;
+            visibility: hidden;
+        }
     }
 
-    $: {
-        d3.select(svg).call(d3.brush().on("start brush end", brushed));
-        // bring the dots to the front of the layers of svgs
-        // ~ selects elements after this selector but still in the same parent
-        d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
+    dl.info dt {
+        grid-column: 1;
+        text-align: right;
+        text-transform: uppercase;
+        color: rgb(87, 87, 87);    
+        font-weight: bold;       
     }
 
-</script>
+    dl.info dd {
+        margin-left: 1em;
+        grid-column: 2;
+    }
+
+    .tooltip {
+        position: fixed;
+        top: 1em;
+        left: 1em;
+    }
+    
+    @keyframes marching-ants {
+        to {
+            stroke-dashoffset: -8; /* 5 + 3 */
+        }
+    }
+
+    svg :global(.selection) {
+        fill-opacity: 10%;
+        stroke: black;
+        stroke-opacity: 70%;
+        stroke-dasharray: 5 3;
+        animation: marching-ants 2s linear infinite;
+    }
+
+
+
+</style>
